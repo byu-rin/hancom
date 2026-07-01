@@ -1,0 +1,12 @@
+/* ① 기본 — 페이지 전체 */
+body { background: linear-gradient(0.25turn, #3f87a6, #ebf8e1, #f69d3c); }
+
+/* ② 요소 선택자 — 모든 h1·p */
+h1 { color: red; }
+p { color: green; }
+
+/* ③ 클래스 선택자 — class="special"만 */
+.special { color: orange }
+
+/* ④ 자손 선택자 — li 안의 em만 */
+li em { color: purple; }
