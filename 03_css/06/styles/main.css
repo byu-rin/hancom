@@ -1,0 +1,5 @@
+.menu {
+    display: flex; /* 자식을 가로로 나란히 */
+    gap: 10px; /* 사이 간격 */
+    list-style: none; /* 점 제거 */
+}

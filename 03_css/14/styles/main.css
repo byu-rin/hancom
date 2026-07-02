@@ -1,0 +1,13 @@
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px /*칸 사이 간격*/
+}
+
+.card {
+    background: hotpink;
+    color: white;
+    text-align: center;
+    padding: 22px 0;
+    border-radius: 8px;
+}

@@ -1,0 +1,14 @@
+.neon {
+    width: 220px; height: 120px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 22px; font-weight: bold;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #ec4899, #8b5cf9);
+    box-shadow: 0 0 25px rgba(236, 72, 153, 0.7)
+}
+
+/*
+ linear-gradient — 두 색 그라디언트 배경(135deg 방향)
+• box-shadow — 흐림 반경 크게 → 네온 글로우
+• 숫자만 바꿔 색·번짐 조절
+*/

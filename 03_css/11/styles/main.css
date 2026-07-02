@@ -1,0 +1,16 @@
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-30px); }
+}
+.ball {
+    width: 80px; height: 80px;
+    margin: 80px;
+    border-radius: 50%; background: hotpink;
+    animation: float 1.5s ease-in-out infinite;
+}
+
+/*
+• @keyframes 이름 — 구간별(0~100%) 모습 정의
+• animation — 그 이름을 요소에 적용(시간·반복)
+• :hover 없이도 자동 — infinite로 무한 반복
+*/
