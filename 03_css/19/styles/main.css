@@ -10,6 +10,7 @@
     --main: #ec4899;
     --text-black: #1f2430; /* 글자 색 */
     --text-white: #fff;
+    --page-bg: #ffffff;
     --gap: 12px;
     --toggle-background-color: #ccc;
     --toggle-checked-background-color: #4b5563;
@@ -74,7 +75,7 @@
 body { 
     margin: 0;
     height: 100%;
-    background: var(--text-white);
+    background: var(--page-bg);
     color: var(--text-black);
     font-family: sans-serif;
 }
@@ -142,8 +143,6 @@ height: 50px;
 background: var(--text-white);
 border-radius: 89px;
 }
-
-
 
 /*h1 text style*/
 h1 {
