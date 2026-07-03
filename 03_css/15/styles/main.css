@@ -1,0 +1,24 @@
+/* 기본(넓은 화면): 카드를 가로로 나란히 */
+.box {
+    display: flex; /* flex 켜기 → 자식(.card)들이 한 줄로 정렬됨 */
+    flex-direction: row; /* 가로 배치 (왼→오) */
+    gap: 10px; /* 카드 사이 간격 10px */
+    padding: 12px;
+    background: #f0f3f6;
+}
+.card {
+    flex: 1; /* 남는 가로 공간 균등 분할 → 카드들 같은 너비 */
+    padding: 30px 0; /* 상하 30px, 좌우 0 → 세로로 통통 (가로는 flex가 결정) */
+    text-align: center; /* 글자 가운데 정렬 */
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+}
+
+/*화면 폭이 600px 이하일 때만 아래 규칙 적용 (모바일) */
+@media (max-width: 600px) {
+    .box {
+        flex-direction: column; /* 세로로 쌓기 */
+    }
+}

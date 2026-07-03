@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      미니 프로젝트 (HTML + CSS) — 01~18 전 기법 종합 프로필 카드 + 과제
+    </title>
+    <link rel="stylesheet" href="styles/main.css" />
+  </head>
+  <body>
+    <input type="checkbox" id="darkToggle" class="toggle-input">
+
+    <!-- position: sticky 헤더 (스크롤해도 상단 고정) + flex 메뉴 -->
+    <header class="bar">
+      <span class="logo">MY PAGE</span>
+      <label for="darkToggle" class="toggle-switch">
+        <span class="toggle-circle"></span>
+      </label>
+      <ul class="menu">
+        <li><a href="#">홈</a></li>
+        <li><a href="#">소개</a></li>
+        <li><a href="#">연락</a></li>
+      </ul>
+    </header>
+
+    <!-- position: relative 부모 + absolute 배지 -->
+    <section class="hero">
+      <h1>𝑳𝑬𝑬 𝑫𝑶 𝒀𝑬𝑶𝑵 ( * ´･з･` *)♪</h1>
+    </section>
+
+    <div class="grid">
+
+      <div class="card">
+        <img src="https://i.pinimg.com/736x/74/c5/d3/74c5d39cf9694b032c31e2afeee1ced7.jpg" alt="FOOD" class="card-img">
+        
+        <div class="card-body">
+          <h1 class="card-title">𝔸𝐕𝐎𝐂𝐀𝐃𝐎</h1>
+          <p class="card-text">🥑 아보카도는 거대 포유류가<br> 씨를 퍼뜨리도록 진화한 과일이라는<br>가설이 있다.</p>
+          <details>
+            <summary>아보카도의 거대한 진실</summary>
+            <p>🥑'악어배(Alligator Pear)'라는 별명도 있다.</p>
+          </details>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://i.pinimg.com/736x/a9/dd/07/a9dd07bbdbcf6a310105eb831848b2c7.jpg" alt="HOBBY" class="card-img">
+        <div class="card-body">
+          <h1 class="card-title">ℂ𝐋𝐈𝐌𝐁𝐈𝐍𝐆</h1>
+          <p class="card-text">🧗 실내 클라이밍은 체스처럼<br>'문제 해결'의 성격도 가진다.</p>
+          <details>
+            <summary>클라이밍을 성공하면?</summary>
+            <p>🧗 어려운 루트를 완등하는 것을 'Send'라고 부른다..</p>
+          </details>
+        </div>
+      </div>
+
+    <div class="card">
+        <img src="https://i.pinimg.com/736x/b6/88/50/b688503ab5232c7d06eba47ebec255a1.jpg" alt="LEARN" class="card-img">
+        <div class="card-body">
+          <h1 class="card-title">𝔽𝐑𝐎𝐍𝐓-𝐄𝐍𝐃</h1>
+          <p class="card-text">🌐 구글 홈페이지가<br>한때 매우 단순했던 이유는<br>HTML이 부족해서가 아니라<br>의도적인 디자인이었다.</p>
+          <details>
+            <summary>프론트엔드로 살아남기</summary>
+            <p>CSS만으로도 게임을 만들 수 있다.</p>
+          </details>
+        </div>
+      </div>
+      
+      <div class="background">
+      <div class="h"></div>
+      <div class="v"></div>
+
+      <div class="rainbow r1"></div>
+      <div class="rainbow r2"></div>
+      <div class="rainbow r3"></div>
+      <div class="rainbow r4"></div>
+      <div class="rainbow r5"></div>
+      <div class="rainbow r6"></div>
+      <div class="rainbow r7"></div>
+      <div class="rainbow r8"></div>
+      <div class="rainbow r9"></div>
+      <div class="rainbow r10"></div>
+      <div class="rainbow r11"></div>
+      <div class="rainbow r12"></div>
+      <div class="rainbow r13"></div>
+      <div class="rainbow r14"></div>
+    </div>
+  </body>
+</html>

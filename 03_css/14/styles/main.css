@@ -7,7 +7,13 @@
 .card {
     background: hotpink;
     color: white;
-    text-align: center;
+    text-align: center; /* 가운데 정렬 */
     padding: 22px 0;
     border-radius: 8px;
 }
+
+/*
+fr = fraction (분수) - 남은 공간을 나눠 갖는 비율 단위
+1fr 2fr 1fr = 1:2:1
+200px 1fr = 200px 먼저 떼고 남은 공간 전부를 1fr 차지(사이드바 고정 + 본문 가변)
+*/

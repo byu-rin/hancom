@@ -1,0 +1,39 @@
+/*
+브라우저 기본 여백 → 시작 전 0으로 초기화 = CSS 리셋
+• * { margin:0; padding:0; box-sizing:border-box; } 3줄이 기본
+• border-box = width가 최종 크기 (padding 줘도 안 커짐)
+• 실무는 이 리셋을 맨 위에 먼저 깔고 스타일 작성
+*/
+
+* {
+  margin: 0;              /* 기본 바깥 여백 제거 */
+  padding: 0;             /* 기본 안쪽 여백 제거 */
+  box-sizing: border-box; /* 크기 계산 방식 변경 */
+}
+
+/* ===== 가상 요소(::before / ::after) 연습 ===== */
+/* 핵심: content 속성이 없으면 화면에 절대 안 나타남! */
+
+/* 1) 제목 앞에 별 붙이기 — ::before */
+.star-title { color: navy; font-style: 18px; }
+.star-title::before {
+    content: "★ ";
+    color: goldenrod;
+}
+
+/* 2) 인용문 양 옆에 따옴표 - ::before + ::after */
+.quote { color: #444; font-style: italic; }
+.quote::before { content: "“ "; color: tomato; font-weight: 700; }
+.quote::after { content: " ”"; color: tomato; font-weight: 700; }
+
+/* 3) 글자 아래 밑줄 장식 - 빈 content + 네모 박스 */
+.underline-deco { position: relative; display: inline-block; color: #24292f; }
+.underline-deco::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 4px;
+    margin-top: 3px;
+    background: royalblue;
+    border-radius: 2px;
+}

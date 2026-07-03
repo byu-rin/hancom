@@ -1,0 +1,30 @@
+/* 1) 값에 이름표 붙이기 — :root 안에 변수 정의 */
+/*    :root = 문서 전체의 뿌리 → 어디서든 꺼내 쓸 수 있음 */
+:root {
+    --main-color: #ec4899;
+    --gap: 12px; /* 버튼 사이 간격 */
+}
+
+.row {
+    display: flex;
+    gap: var(--gap)
+}
+
+.btn {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 8px; /* ① 모서리 둥글게 */
+    opacity: 0.85; /* ② 살짝 비치게 (1=꽉참) */
+    transition: all 0.3s ease; /* ④ 바뀔 때 0.3초 스르륵 */
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25); /* ③ 그림자 → 0:좌우  6px:위아래  18px:번짐  rgba:색+투명도 */
+    background: var(--main-color); 
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn:hover {
+    opacity: 1;
+    transform: translateZ(-8px);
+    box-shadow: 0 16px 32px rgba(255,105,180,0.5);  /* 그림자 진하게 */
+}
