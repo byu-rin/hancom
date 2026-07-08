@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>proptier</title>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="search-app"></div>
+
+  <!-- Storage 레이어 -->
+  <script src="storage.js"></script>
+
+  <!-- Provider 레이어 (Mock / Real 교체 가능) -->
+  <script src="mockProvider.js"></script>
+  <script src="apiProvider.js"></script>
+
+  <!-- Service 레이어 -->
+  <script src="service.js"></script>
+
+  <!-- UI 레이어 -->
+  <script src="ui.js"></script>
+
+  <!-- Harness (기능 구현 전 테스트 코드) -->
+  <script src="harness.js"></script>
+
+  <!-- 앱 진입점 -->
+  <script src="app.js"></script>
+</body>
+</html>
