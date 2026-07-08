@@ -393,13 +393,58 @@ async function testApartmentDetailWiring() {
 }
 
 /**
+ * testUI
+ * 디자인 개선 사항(style.css 로드, 주요 Card 렌더링, Hover/선택 Class 적용)을 검증한다.
+ * 모든 항목이 통과하면 'PASS'를 출력한다.
+ */
+async function testUI() {
+  const results = [];
+  resetUiWiringState();
+
+  const styleLink = document.querySelector('link[href="css/style.css"]');
+  results.push(!!styleLink);
+
+  const apartments = await mockProvider.searchApartment('');
+  const [firstApt, secondApt] = apartments;
+
+  const container = document.createElement('div');
+  initSearchApp(container);
+  const input = container.querySelector('.search-input');
+  const button = container.querySelector('.search-button');
+
+  await performSearch(input, button, firstApt.aptName);
+  const firstCard = container.querySelector('.apartment-card');
+  results.push(!!firstCard && firstCard.classList.contains('clickable'));
+
+  firstCard.click();
+  await wait(50);
+  results.push(firstCard.classList.contains('selected'));
+  results.push(!!container.querySelector('.favorite-button'));
+
+  await performSearch(input, button, secondApt.aptName);
+  const secondCard = container.querySelector('.apartment-card');
+  secondCard.click();
+  await wait(50);
+  results.push(secondCard.classList.contains('selected'));
+
+  resetUiWiringState();
+
+  const allPassed = results.every((result) => result === true);
+  assert(allPassed, 'testUI: style.css 로드/Card 렌더링/Hover-Selected Class 확인');
+  if (allPassed) {
+    console.log('PASS');
+  }
+}
+
+/**
  * runUiWiringHarness
- * testUiServiceWiring과 testApartmentDetailWiring은 RecentSearchService/FavoriteService
+ * testUiServiceWiring/testApartmentDetailWiring/testUI는 RecentSearchService/FavoriteService
  * 상태를 공유하므로, 동시 실행으로 인한 경쟁 상태를 막기 위해 순차적으로 실행한다.
  */
 async function runUiWiringHarness() {
   await testUiServiceWiring();
   await testApartmentDetailWiring();
+  await testUI();
 }
 
 window.addEventListener('DOMContentLoaded', runUiWiringHarness);

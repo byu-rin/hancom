@@ -77,6 +77,7 @@ function renderApartmentCard(apartment, onSelect) {
   card.appendChild(createFavoriteButton(apartment));
 
   if (onSelect) {
+    card.classList.add("clickable");
     card.addEventListener("click", () => onSelect(apartment.id));
   }
 
@@ -150,6 +151,8 @@ function renderDealTable(deals) {
 /**
  * renderSearchResult
  * 검색된 아파트 목록을 받아 카드들을 감싸는 컨테이너 엘리먼트를 생성한다.
+ * onSelect가 주어지면 클릭한 카드에 'selected' class를 부여하고, 이전에 선택된
+ * 카드에서는 제거하여 한 번에 하나의 카드만 강조 표시되도록 한다.
  * @param {Array<Object>} apartments - renderApartmentCard에 전달할 아파트 목록
  * @param {function(number): void} [onSelect] - 카드 클릭 시 실행할 콜백 (선택)
  * @returns {HTMLElement} 검색 결과 컨테이너 엘리먼트
@@ -160,13 +163,25 @@ function renderSearchResult(apartments, onSelect) {
 
   if (apartments.length === 0) {
     const empty = document.createElement("p");
+    empty.className = "empty-message";
     empty.textContent = "검색 결과가 없습니다.";
     container.appendChild(empty);
     return container;
   }
 
+  let selectedCard = null;
   apartments.forEach((apartment) => {
-    container.appendChild(renderApartmentCard(apartment, onSelect));
+    let card;
+    const handleSelect = onSelect
+      ? (id) => {
+          if (selectedCard) selectedCard.classList.remove("selected");
+          card.classList.add("selected");
+          selectedCard = card;
+          onSelect(id);
+        }
+      : undefined;
+    card = renderApartmentCard(apartment, handleSelect);
+    container.appendChild(card);
   });
 
   return container;
@@ -185,6 +200,7 @@ function renderApartmentDetail(apartment, deals) {
 
   if (!apartment) {
     const empty = document.createElement("p");
+    empty.className = "empty-message";
     empty.textContent = "단지 정보를 찾을 수 없습니다.";
     container.appendChild(empty);
     return container;
@@ -210,6 +226,7 @@ function renderRecentSearchList(keywords, onSelect) {
 
   if (keywords.length === 0) {
     const empty = document.createElement("li");
+    empty.className = "empty-message";
     empty.textContent = "최근 검색어가 없습니다.";
     list.appendChild(empty);
     return list;
