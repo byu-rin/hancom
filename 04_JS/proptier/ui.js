@@ -6,32 +6,68 @@
  * 데이터를 주고받는다.
  */
 
+/** @type {string} 검색 입력창 placeholder 문구 */
+const SEARCH_INPUT_PLACEHOLDER = "아파트 이름 검색";
+
+/** @type {string} 검색 버튼 라벨 */
+const SEARCH_BUTTON_LABEL = "검색";
+
+/** @type {string} 검색 결과가 없을 때 표시할 문구 */
+const EMPTY_RESULT_MESSAGE = "검색 결과가 없습니다.";
+
+/** @type {string} 최근 검색어가 없을 때 표시할 문구 */
+const EMPTY_RECENT_MESSAGE = "최근 검색어가 없습니다.";
+
+/** @type {string} 단지 정보를 찾지 못했을 때 표시할 문구 */
+const EMPTY_DETAIL_MESSAGE = "단지 정보를 찾을 수 없습니다.";
+
+/** @type {string} 즐겨찾기 버튼의 '즐겨찾기됨' 라벨 */
+const FAVORITE_ON_LABEL = "★ 즐겨찾기됨";
+
+/** @type {string} 즐겨찾기 버튼의 '즐겨찾기 안 됨' 라벨 */
+const FAVORITE_OFF_LABEL = "☆ 즐겨찾기";
+
+/** @type {Array<string>} 거래내역 테이블 헤더 라벨 (계약일/가격/전용면적/층 순서) */
+const DEAL_TABLE_HEADERS = ["계약일", "가격(만원)", "전용면적(㎡)", "층"];
+
+/**
+ * createStyledElement
+ * 지정한 태그의 엘리먼트를 생성하고 className/textContent를 함께 적용한다.
+ * "createElement → className 설정 → textContent 설정"이 반복되는 패턴을 통합한다.
+ * @param {string} tag - 생성할 태그명
+ * @param {string} [className] - 적용할 class (선택)
+ * @param {string} [text] - 설정할 textContent (선택)
+ * @returns {HTMLElement} 생성된 엘리먼트
+ */
+function createStyledElement(tag, className, text) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (text !== undefined) element.textContent = text;
+  return element;
+}
+
 /**
  * initSearchApp
- * 검색창, 최근 검색어 목록, 검색 결과, 단지 상세 영역을 root에 렌더링하고
+ * 검색창, 최근 검색어 목록, 검색 결과(Accordion) 영역을 root에 렌더링하고
  * SearchService / RecentSearchService / FavoriteService / ApartmentDetailService와 연결한다.
+ * 단지 정보/거래내역은 더 이상 별도 하단 영역이 아니라, 클릭한 카드 아래에 Accordion으로 펼쳐진다.
  * @param {HTMLElement} root - UI를 렌더링할 최상위 컨테이너
  */
 function initSearchApp(root) {
   const { searchInput, searchButton } = createSearchControls();
-  const { recentListContainer, resultContainer, detailContainer } = createSearchContainers();
-
-  const showApartmentDetail = async (id) => {
-    const { apartment, deals } = await ApartmentDetailService.getDetail(id);
-    detailContainer.innerHTML = "";
-    detailContainer.appendChild(renderApartmentDetail(apartment, deals));
-  };
+  const { recentListContainer, resultContainer } = createSearchContainers();
 
   const runSearch = async (keyword) => {
     const apartments = await SearchService.search(keyword);
     resultContainer.innerHTML = "";
-    resultContainer.appendChild(renderSearchResult(apartments, showApartmentDetail));
-    detailContainer.innerHTML = "";
+    resultContainer.appendChild(renderSearchResult(apartments));
   };
 
   const refreshRecentList = () => {
     recentListContainer.innerHTML = "";
-    recentListContainer.appendChild(renderRecentSearchList(RecentSearchService.getAll(), runSearch));
+    recentListContainer.appendChild(
+      renderRecentSearchList(RecentSearchService.getAll(), runSearch),
+    );
   };
 
   searchButton.addEventListener("click", () => {
@@ -45,7 +81,6 @@ function initSearchApp(root) {
   root.appendChild(searchButton);
   root.appendChild(recentListContainer);
   root.appendChild(resultContainer);
-  root.appendChild(detailContainer);
 
   refreshRecentList();
 }
@@ -59,17 +94,14 @@ function initSearchApp(root) {
  * @returns {HTMLElement} 단지 카드 엘리먼트
  */
 function renderApartmentCard(apartment, onSelect) {
-  const card = document.createElement("div");
-  card.className = "apartment-card";
-
-  const title = document.createElement("h3");
-  title.textContent = apartment.aptName;
-
-  const address = document.createElement("p");
-  address.textContent = apartment.address;
-
-  const info = document.createElement("p");
-  info.textContent = `${apartment.buildYear}년 준공 / ${apartment.households}세대 / 최고 ${apartment.maxFloor}층`;
+  const card = createStyledElement("div", "apartment-card");
+  const title = createStyledElement("h3", undefined, apartment.aptName);
+  const address = createStyledElement("p", undefined, apartment.address);
+  const info = createStyledElement(
+    "p",
+    undefined,
+    `${apartment.buildYear}년 준공 / ${apartment.households}세대 / 최고 ${apartment.maxFloor}층`,
+  );
 
   card.appendChild(title);
   card.appendChild(address);
@@ -92,12 +124,11 @@ function renderApartmentCard(apartment, onSelect) {
  * @returns {HTMLElement} 즐겨찾기 버튼 엘리먼트
  */
 function createFavoriteButton(apartment) {
-  const button = document.createElement("button");
+  const button = createStyledElement("button", "favorite-button");
   button.type = "button";
-  button.className = "favorite-button";
 
   const updateState = (isFavorite) => {
-    button.textContent = isFavorite ? "★ 즐겨찾기됨" : "☆ 즐겨찾기";
+    button.textContent = isFavorite ? FAVORITE_ON_LABEL : FAVORITE_OFF_LABEL;
     button.classList.toggle("is-favorite", isFavorite);
   };
 
@@ -119,28 +150,18 @@ function createFavoriteButton(apartment) {
  * @returns {HTMLElement} 실거래가 테이블 엘리먼트
  */
 function renderDealTable(deals) {
-  const table = document.createElement("table");
-  table.className = "deal-table";
+  const table = createStyledElement("table", "deal-table");
 
   const headerRow = document.createElement("tr");
-  ["계약일", "가격(만원)", "전용면적(㎡)", "층"].forEach((label) => {
-    const th = document.createElement("th");
-    th.textContent = label;
-    headerRow.appendChild(th);
+  DEAL_TABLE_HEADERS.forEach((label) => {
+    headerRow.appendChild(createStyledElement("th", undefined, label));
   });
   table.appendChild(headerRow);
 
   deals.forEach((deal) => {
     const row = document.createElement("tr");
-    [
-      deal.dealDate,
-      deal.price.toLocaleString(),
-      deal.exclusiveArea,
-      deal.floor,
-    ].forEach((value) => {
-      const td = document.createElement("td");
-      td.textContent = value;
-      row.appendChild(td);
+    [deal.dealDate, deal.price.toLocaleString(), deal.exclusiveArea, deal.floor].forEach((value) => {
+      row.appendChild(createStyledElement("td", undefined, value));
     });
     table.appendChild(row);
   });
@@ -150,41 +171,85 @@ function renderDealTable(deals) {
 
 /**
  * renderSearchResult
- * 검색된 아파트 목록을 받아 카드들을 감싸는 컨테이너 엘리먼트를 생성한다.
- * onSelect가 주어지면 클릭한 카드에 'selected' class를 부여하고, 이전에 선택된
- * 카드에서는 제거하여 한 번에 하나의 카드만 강조 표시되도록 한다.
- * @param {Array<Object>} apartments - renderApartmentCard에 전달할 아파트 목록
- * @param {function(number): void} [onSelect] - 카드 클릭 시 실행할 콜백 (선택)
+ * 검색된 단지 목록을 Accordion 카드 목록으로 렌더링한다. 카드를 클릭하면 카드
+ * 바로 아래에 단지 정보와 거래내역이 함께 펼쳐지고(Accordion), 다른 카드를
+ * 클릭하면 이전에 열린 카드는 닫히며 새 카드만 열린다. 같은 카드를 다시
+ * 클릭하면 닫힌다.
+ * @param {Array<Object>} apartments - 검색된 단지 목록
  * @returns {HTMLElement} 검색 결과 컨테이너 엘리먼트
  */
-function renderSearchResult(apartments, onSelect) {
-  const container = document.createElement("div");
-  container.className = "search-result";
+function renderSearchResult(apartments) {
+  const container = createStyledElement("div", "search-result");
 
   if (apartments.length === 0) {
-    const empty = document.createElement("p");
-    empty.className = "empty-message";
-    empty.textContent = "검색 결과가 없습니다.";
-    container.appendChild(empty);
+    container.appendChild(createStyledElement("p", "empty-message", EMPTY_RESULT_MESSAGE));
     return container;
   }
 
-  let selectedCard = null;
+  const accordionState = { openItem: null };
   apartments.forEach((apartment) => {
-    let card;
-    const handleSelect = onSelect
-      ? (id) => {
-          if (selectedCard) selectedCard.classList.remove("selected");
-          card.classList.add("selected");
-          selectedCard = card;
-          onSelect(id);
-        }
-      : undefined;
-    card = renderApartmentCard(apartment, handleSelect);
-    container.appendChild(card);
+    container.appendChild(createAccordionItem(apartment, accordionState));
   });
 
   return container;
+}
+
+/**
+ * createAccordionItem
+ * 단지 카드와 그 카드에 대응하는 Accordion 패널(단지 정보 + 거래내역)을
+ * 함께 감싸는 결과 항목을 생성한다. 실제 펼침/닫힘 동작은 toggleAccordion이 담당한다.
+ * @param {Object} apartment - 단지 정보
+ * @param {{openItem: {card: HTMLElement, panel: HTMLElement}|null}} accordionState - 열려 있는 항목을 추적하는 공유 상태
+ * @returns {HTMLElement} 결과 항목(카드 + Accordion 패널) 엘리먼트
+ */
+function createAccordionItem(apartment, accordionState) {
+  const wrapper = createStyledElement("div", "result-item");
+  const panel = createStyledElement("div", "accordion-panel");
+
+  // renderApartmentCard 호출 시점에 card를 아직 대입하지 못하므로 let으로 먼저
+  // 선언한다. 클릭 콜백은 이후(비동기)에 실행되므로 그 시점엔 card가 채워져 있다.
+  let card;
+  card = renderApartmentCard(apartment, () =>
+    toggleAccordion(apartment, card, panel, accordionState),
+  );
+
+  wrapper.appendChild(card);
+  wrapper.appendChild(panel);
+
+  return wrapper;
+}
+
+/**
+ * toggleAccordion
+ * 카드를 클릭했을 때 Accordion을 펼치거나 닫는다. 이미 열려 있는 카드를 다시
+ * 클릭하면 닫고, 다른 카드를 클릭하면 이전 카드를 닫은 뒤 새 카드를 연다.
+ * 패널 내용은 ApartmentDetailService.getDetail()로 최초 펼침 시 한 번만 채운다.
+ * @param {Object} apartment - 단지 정보
+ * @param {HTMLElement} card - 클릭된 단지 카드 엘리먼트
+ * @param {HTMLElement} panel - 카드에 대응하는 Accordion 패널 엘리먼트
+ * @param {{openItem: {card: HTMLElement, panel: HTMLElement}|null}} accordionState - 열려 있는 항목을 추적하는 공유 상태
+ */
+async function toggleAccordion(apartment, card, panel, accordionState) {
+  const wasOpen =
+    accordionState.openItem && accordionState.openItem.card === card;
+
+  if (accordionState.openItem) {
+    accordionState.openItem.card.classList.remove("selected");
+    accordionState.openItem.panel.classList.remove("open");
+    accordionState.openItem = null;
+  }
+
+  if (wasOpen) return;
+
+  if (panel.children.length === 0) {
+    const { apartment: detailApartment, deals } =
+      await ApartmentDetailService.getDetail(apartment.id);
+    panel.appendChild(renderApartmentDetail(detailApartment, deals));
+  }
+
+  card.classList.add("selected");
+  panel.classList.add("open");
+  accordionState.openItem = { card, panel };
 }
 
 /**
@@ -195,18 +260,13 @@ function renderSearchResult(apartments, onSelect) {
  * @returns {HTMLElement} 단지 상세 컨테이너 엘리먼트
  */
 function renderApartmentDetail(apartment, deals) {
-  const container = document.createElement("div");
-  container.className = "apartment-detail";
+  const container = createStyledElement("div", "apartment-detail");
 
   if (!apartment) {
-    const empty = document.createElement("p");
-    empty.className = "empty-message";
-    empty.textContent = "단지 정보를 찾을 수 없습니다.";
-    container.appendChild(empty);
+    container.appendChild(createStyledElement("p", "empty-message", EMPTY_DETAIL_MESSAGE));
     return container;
   }
 
-  container.appendChild(renderApartmentCard(apartment));
   container.appendChild(renderDealTable(deals));
 
   return container;
@@ -221,21 +281,15 @@ function renderApartmentDetail(apartment, deals) {
  * @returns {HTMLElement} 최근 검색어 리스트 엘리먼트
  */
 function renderRecentSearchList(keywords, onSelect) {
-  const list = document.createElement("ul");
-  list.className = "recent-search-list";
+  const list = createStyledElement("ul", "recent-search-list");
 
   if (keywords.length === 0) {
-    const empty = document.createElement("li");
-    empty.className = "empty-message";
-    empty.textContent = "최근 검색어가 없습니다.";
-    list.appendChild(empty);
+    list.appendChild(createStyledElement("li", "empty-message", EMPTY_RECENT_MESSAGE));
     return list;
   }
 
   keywords.forEach((keyword) => {
-    const item = document.createElement("li");
-    item.className = "recent-search-item";
-    item.textContent = keyword;
+    const item = createStyledElement("li", "recent-search-item", keyword);
     item.addEventListener("click", () => onSelect(keyword));
     list.appendChild(item);
   });
@@ -249,33 +303,26 @@ function renderRecentSearchList(keywords, onSelect) {
  * @returns {{searchInput: HTMLElement, searchButton: HTMLElement}} 검색 컨트롤 엘리먼트
  */
 function createSearchControls() {
-  const searchInput = document.createElement("input");
+  const searchInput = createStyledElement("input", "search-input");
   searchInput.type = "text";
-  searchInput.className = "search-input";
-  searchInput.placeholder = "아파트 이름 검색";
+  searchInput.placeholder = SEARCH_INPUT_PLACEHOLDER;
 
-  const searchButton = document.createElement("button");
+  const searchButton = createStyledElement("button", "search-button", SEARCH_BUTTON_LABEL);
   searchButton.type = "button";
-  searchButton.className = "search-button";
-  searchButton.textContent = "검색";
 
   return { searchInput, searchButton };
 }
 
 /**
  * createSearchContainers
- * 최근 검색어, 검색 결과, 단지 상세를 표시할 컨테이너 엘리먼트를 생성한다.
- * @returns {{recentListContainer: HTMLElement, resultContainer: HTMLElement, detailContainer: HTMLElement}} 컨테이너 엘리먼트
+ * 최근 검색어, 검색 결과(Accordion)를 표시할 컨테이너 엘리먼트를 생성한다.
+ * 단지 정보/거래내역은 더 이상 별도 컨테이너가 아니라 각 결과 카드 내부의
+ * Accordion 패널에 표시되므로 별도 detailContainer는 사용하지 않는다.
+ * @returns {{recentListContainer: HTMLElement, resultContainer: HTMLElement}} 컨테이너 엘리먼트
  */
 function createSearchContainers() {
-  const recentListContainer = document.createElement("div");
-  recentListContainer.className = "recent-search-container";
+  const recentListContainer = createStyledElement("div", "recent-search-container");
+  const resultContainer = createStyledElement("div", "search-result-container");
 
-  const resultContainer = document.createElement("div");
-  resultContainer.className = "search-result-container";
-
-  const detailContainer = document.createElement("div");
-  detailContainer.className = "apartment-detail-container";
-
-  return { recentListContainer, resultContainer, detailContainer };
+  return { recentListContainer, resultContainer };
 }
