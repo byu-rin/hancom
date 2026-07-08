@@ -7,6 +7,22 @@
  */
 
 /**
+ * removeKey
+ * LocalStorage에서 특정 키를 안전하게 삭제한다.
+ * remove/clear가 동일한 삭제 로직을 공유하기 위한 내부 헬퍼.
+ * @param {string} key - 삭제할 키
+ * @returns {boolean} 삭제 성공 여부
+ */
+function removeKey(key) {
+  try {
+    localStorage.removeItem(key);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
  * save
  * 값을 JSON으로 직렬화하여 LocalStorage에 저장한다.
  * 예외가 발생해도 앱이 종료되지 않도록 내부에서 처리한다.
@@ -46,12 +62,7 @@ function load(key) {
  * @returns {boolean} 삭제 성공 여부
  */
 function remove(key) {
-  try {
-    localStorage.removeItem(key);
-    return true;
-  } catch (error) {
-    return false;
-  }
+  return removeKey(key);
 }
 
 /**
@@ -61,12 +72,7 @@ function remove(key) {
  * @returns {boolean} 초기화 성공 여부
  */
 function clear(key) {
-  try {
-    localStorage.removeItem(key);
-    return true;
-  } catch (error) {
-    return false;
-  }
+  return removeKey(key);
 }
 
 /**

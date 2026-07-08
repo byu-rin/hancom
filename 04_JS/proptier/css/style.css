@@ -1,0 +1,256 @@
+/*
+ * style.css
+ * proptier 검색 UI를 위한 디자인 스타일시트.
+ * 파스텔 톤, 카드 기반 레이아웃을 사용하는 Public 부동산 웹사이트 컨셉.
+ */
+
+:root {
+  --color-background: #f6f7f9;
+  --color-primary: #6e8eae;
+  --color-primary-hover: #5d7e9f;
+  --color-apt-header: #d9eaf7;
+  --color-deal-header: #ddefd9;
+  --color-recent-header: #f7ecd8;
+  --color-favorite-header: #e9ddf7;
+  --color-favorite-active: #c9a9e9;
+  --color-border: #e4e7eb;
+  --color-text: #424242;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
+}
+
+#search-app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* 검색창: 항상 최상단, 충분한 가로폭 */
+.search-input {
+  flex: 1 1 60%;
+  min-width: 240px;
+  padding: 14px 20px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  font-size: 15px;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.search-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(110, 142, 174, 0.2);
+}
+
+.search-button {
+  flex: 0 0 auto;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--color-background) 0.15s ease, transform 0.15s ease;
+}
+
+.search-button:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+/* 최근 검색: 자체 카드 영역, 파스텔 오렌지 */
+.recent-search-container,
+.search-result-container {
+  flex: 1 1 100%;
+  margin-top: 8px;
+}
+
+.recent-search-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 14px 16px;
+  background: var(--color-recent-header);
+  border-radius: 12px;
+}
+
+.recent-search-item {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: var(--color-background) 0.15s ease, transform 0.15s ease;
+}
+
+.recent-search-item:hover {
+  background: #fff8ec;
+  transform: translateY(-1px);
+}
+
+/* 검색 결과 / 단지 정보 카드: 파스텔 블루 헤더 */
+.search-result {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.apartment-card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.apartment-card.clickable {
+  cursor: pointer;
+}
+
+.apartment-card.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.apartment-card.selected {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(110, 142, 174, 0.35);
+}
+
+/* Accordion: 카드 아래에 단지 정보 + 거래내역이 펼쳐지는 영역 */
+.result-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.accordion-panel {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
+}
+
+.accordion-panel.open {
+  max-height: 2000px;
+  opacity: 1;
+  margin-top: 16px;
+}
+
+.apartment-card h3 {
+  margin: -16px -16px 12px;
+  padding: 12px 16px;
+  background: var(--color-apt-header);
+  border-radius: 12px 12px 0 0;
+  font-size: 15px;
+}
+
+.apartment-card p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+/* 즐겨찾기 버튼: 파스텔 퍼플 */
+.favorite-button {
+  margin-top: 10px;
+  border: 1px solid var(--color-border);
+  background: var(--color-favorite-header);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: var(--color-background) 0.15s ease, transform 0.15s ease;
+}
+
+.favorite-button:hover {
+  transform: translateY(-1px);
+  filter: brightness(0.97);
+}
+
+.favorite-button.is-favorite {
+  background: var(--color-favorite-active);
+  color: #fff;
+  border-color: var(--color-favorite-active);
+}
+
+/* 단지 상세: 단지 정보 + 거래내역을 세로로 여유있게 배치 */
+.apartment-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 거래내역 테이블: 파스텔 그린 헤더 */
+.deal-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.deal-table th {
+  background: var(--color-deal-header);
+  text-align: right;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.deal-table th:first-child,
+.deal-table td:first-child {
+  text-align: left;
+}
+
+.deal-table td {
+  padding: 8px 12px;
+  font-size: 13px;
+  text-align: right;
+  border-top: 1px solid var(--color-border);
+}
+
+.deal-table tr:nth-child(even) td {
+  background: #fafbfc;
+}
+
+.deal-table tr:hover td {
+  background: #f0f4f8;
+}
+
+.empty-message {
+  color: #8a8a8a;
+  font-style: italic;
+  font-size: 13px;
+}
+
+/* 반응형: 좁은 화면에서는 검색창/버튼이 각각 한 줄을 차지 */
+@media (max-width: 640px) {
+  #search-app {
+    padding: 20px 16px 48px;
+  }
+
+  .search-input,
+  .search-button {
+    flex-basis: 100%;
+  }
+}

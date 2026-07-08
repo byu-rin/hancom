@@ -12,31 +12,33 @@
  * renderApartmentCard, renderDealTable, renderSearchResult를 #app 컨테이너에 렌더링한다.
  */
 async function runUiHarness() {
-  const app = document.getElementById('app');
+  const app = document.getElementById("app");
   if (!app) return;
 
-  const apartments = await mockProvider.searchApartment('');
+  const apartments = await mockProvider.searchApartment("");
   if (apartments.length === 0) return;
 
   const firstApartment = apartments[0];
-  const deals = await mockProvider.getDeals(firstApartment.id);
+  // const deals = await mockProvider.getDeals(firstApartment.id);
 
-  const cardSection = document.createElement('section');
+  const cardSection = document.createElement("section");
   cardSection.appendChild(renderApartmentCard(firstApartment));
   app.appendChild(cardSection);
 
-  const tableSection = document.createElement('section');
-  tableSection.appendChild(renderDealTable(deals));
+  const tableSection = document.createElement("section");
+  // tableSection.appendChild(renderDealTable(deals));
   app.appendChild(tableSection);
 
-  const resultSection = document.createElement('section');
+  const resultSection = document.createElement("section");
   resultSection.appendChild(renderSearchResult(apartments.slice(0, 5)));
   app.appendChild(resultSection);
 
-  console.log('[harness] JSON Mock 데이터 렌더링 완료: renderApartmentCard, renderDealTable, renderSearchResult');
+  console.log(
+    "[harness] JSON Mock 데이터 렌더링 완료: renderApartmentCard, renderDealTable, renderSearchResult",
+  );
 }
 
-window.addEventListener('DOMContentLoaded', runUiHarness);
+window.addEventListener("DOMContentLoaded", runUiHarness);
 
 /**
  * assert
@@ -45,7 +47,7 @@ window.addEventListener('DOMContentLoaded', runUiHarness);
  * @param {string} message - 검증 내용을 설명하는 문구
  */
 function assert(condition, message) {
-  console.log(`${condition ? '[PASS]' : '[FAIL]'} ${message}`);
+  console.log(`${condition ? "[PASS]" : "[FAIL]"} ${message}`);
 }
 
 /**
@@ -54,18 +56,24 @@ function assert(condition, message) {
  * UI는 사용하지 않고 결과를 console에만 출력한다.
  */
 async function runSearchServiceHarness() {
-  const all = await SearchService.search('');
-  assert(all.length === 100, `빈 검색어 → 전체 ${all.length}건 반환 (기대값 100)`);
+  const all = await SearchService.search("");
+  assert(
+    all.length === 100,
+    `빈 검색어 → 전체 ${all.length}건 반환 (기대값 100)`,
+  );
 
   const target = all[0];
   const exact = await SearchService.search(target.aptName);
-  assert(exact.some((apt) => apt.id === target.id), `'${target.aptName}' 검색 → 대상 단지 포함`);
+  assert(
+    exact.some((apt) => apt.id === target.id),
+    `'${target.aptName}' 검색 → 대상 단지 포함`,
+  );
 
-  const none = await SearchService.search('존재하지않는검색어__xyz');
-  assert(none.length === 0, '존재하지 않는 검색어 → 빈 배열 반환');
+  const none = await SearchService.search("존재하지않는검색어__xyz");
+  assert(none.length === 0, "존재하지 않는 검색어 → 빈 배열 반환");
 }
 
-window.addEventListener('DOMContentLoaded', runSearchServiceHarness);
+window.addEventListener("DOMContentLoaded", runSearchServiceHarness);
 
 /**
  * testSearchApartmentCriteria
@@ -75,36 +83,46 @@ window.addEventListener('DOMContentLoaded', runSearchServiceHarness);
  */
 async function testSearchApartmentCriteria() {
   const results = [];
-  const all = await SearchService.search('');
+  const all = await SearchService.search("");
   const target = all[0];
 
   const byFullName = await SearchService.search(target.aptName);
   results.push(byFullName.some((apt) => apt.id === target.id));
 
-  const addressToken = target.address.split(' ')[1];
+  const addressToken = target.address.split(" ")[1];
   const byAddress = await SearchService.search(addressToken);
   results.push(byAddress.some((apt) => apt.id === target.id));
 
-  const partialKeyword = target.aptName.slice(0, Math.ceil(target.aptName.length / 2));
+  const partialKeyword = target.aptName.slice(
+    0,
+    Math.ceil(target.aptName.length / 2),
+  );
   const byPartial = await SearchService.search(partialKeyword);
   results.push(byPartial.some((apt) => apt.id === target.id));
 
   const englishApt = all.find((apt) => /[a-zA-Z]/.test(apt.aptName));
   if (englishApt) {
-    const byLower = await SearchService.search(englishApt.aptName.toLowerCase());
-    const byUpper = await SearchService.search(englishApt.aptName.toUpperCase());
+    const byLower = await SearchService.search(
+      englishApt.aptName.toLowerCase(),
+    );
+    const byUpper = await SearchService.search(
+      englishApt.aptName.toUpperCase(),
+    );
     results.push(byLower.some((apt) => apt.id === englishApt.id));
     results.push(byUpper.some((apt) => apt.id === englishApt.id));
   }
 
   const allPassed = results.every((result) => result === true);
-  assert(allPassed, 'testSearchApartmentCriteria: 이름/주소/부분/대소문자 검색 확인');
+  assert(
+    allPassed,
+    "testSearchApartmentCriteria: 이름/주소/부분/대소문자 검색 확인",
+  );
   if (allPassed) {
-    console.log('PASS');
+    console.log("PASS");
   }
 }
 
-window.addEventListener('DOMContentLoaded', testSearchApartmentCriteria);
+window.addEventListener("DOMContentLoaded", testSearchApartmentCriteria);
 
 /**
  * testMockProviderData
@@ -115,30 +133,36 @@ window.addEventListener('DOMContentLoaded', testSearchApartmentCriteria);
 async function testMockProviderData() {
   const results = [];
 
-  const apartments = await mockProvider.searchApartment('');
+  const apartments = await mockProvider.searchApartment("");
   results.push(Array.isArray(apartments) && apartments.length === 100);
 
   const first = apartments[0];
-  results.push(!!first && typeof first.aptName === 'string');
+  results.push(!!first && typeof first.aptName === "string");
 
   const found = await mockProvider.getApartment(first.id);
   results.push(!!found && found.id === first.id);
 
   const deals = await mockProvider.getDeals(first.id);
-  results.push(Array.isArray(deals) && deals.every((deal) => deal.apartmentId === first.id));
+  results.push(
+    Array.isArray(deals) &&
+      deals.every((deal) => deal.apartmentId === first.id),
+  );
 
-  const dealsResponse = await fetch('./data/deals.json');
+  const dealsResponse = await fetch("./data/deals.json");
   const allDeals = await dealsResponse.json();
   results.push(Array.isArray(allDeals) && allDeals.length === 50);
 
   const allPassed = results.every((result) => result === true);
-  assert(allPassed, 'testMockProviderData: JSON fetch/검색/조회/거래내역 연결 확인');
+  assert(
+    allPassed,
+    "testMockProviderData: JSON fetch/검색/조회/거래내역 연결 확인",
+  );
   if (allPassed) {
-    console.log('PASS');
+    console.log("PASS");
   }
 }
 
-window.addEventListener('DOMContentLoaded', testMockProviderData);
+window.addEventListener("DOMContentLoaded", testMockProviderData);
 
 /**
  * testStorage
@@ -146,8 +170,8 @@ window.addEventListener('DOMContentLoaded', testMockProviderData);
  * 모든 항목이 통과하면 'PASS'를 출력한다.
  */
 function testStorage() {
-  const key = '__harness_storage_test__';
-  const value = { name: '테스트', count: 1 };
+  const key = "__harness_storage_test__";
+  const value = { name: "테스트", count: 1 };
   const results = [];
 
   results.push(save(key, value) === true);
@@ -158,18 +182,18 @@ function testStorage() {
   results.push(load(key) === null);
   results.push(exists(key) === false);
 
-  save(key, 'temp');
+  save(key, "temp");
   clear(key);
   results.push(load(key) === null);
 
   const allPassed = results.every((result) => result === true);
-  assert(allPassed, 'testStorage: 저장/조회/삭제/초기화/존재여부 확인');
+  assert(allPassed, "testStorage: 저장/조회/삭제/초기화/존재여부 확인");
   if (allPassed) {
-    console.log('PASS');
+    console.log("PASS");
   }
 }
 
-window.addEventListener('DOMContentLoaded', testStorage);
+window.addEventListener("DOMContentLoaded", testStorage);
 
 /**
  * testRecentSearch
@@ -180,37 +204,40 @@ function testRecentSearch() {
   const results = [];
   RecentSearchService.clear();
 
-  RecentSearchService.add('   ');
+  RecentSearchService.add("   ");
   results.push(RecentSearchService.getAll().length === 0);
 
-  RecentSearchService.add('강남구');
-  RecentSearchService.add('서초구');
-  RecentSearchService.add('강남구');
+  RecentSearchService.add("강남구");
+  RecentSearchService.add("서초구");
+  RecentSearchService.add("강남구");
   const afterDuplicate = RecentSearchService.getAll();
   results.push(afterDuplicate.length === 2);
-  results.push(afterDuplicate[0] === '강남구');
+  results.push(afterDuplicate[0] === "강남구");
 
   for (let i = 0; i < 15; i += 1) {
     RecentSearchService.add(`검색어${i}`);
   }
   const afterMany = RecentSearchService.getAll();
   results.push(afterMany.length === MAX_RECENT_SEARCHES);
-  results.push(afterMany[0] === '검색어14');
+  results.push(afterMany[0] === "검색어14");
 
-  RecentSearchService.remove('검색어14');
-  results.push(!RecentSearchService.getAll().includes('검색어14'));
+  RecentSearchService.remove("검색어14");
+  results.push(!RecentSearchService.getAll().includes("검색어14"));
 
   RecentSearchService.clear();
   results.push(RecentSearchService.getAll().length === 0);
 
   const allPassed = results.every((result) => result === true);
-  assert(allPassed, 'testRecentSearch: 저장/중복제거/최대개수/삭제/초기화 확인');
+  assert(
+    allPassed,
+    "testRecentSearch: 저장/중복제거/최대개수/삭제/초기화 확인",
+  );
   if (allPassed) {
-    console.log('PASS');
+    console.log("PASS");
   }
 }
 
-window.addEventListener('DOMContentLoaded', testRecentSearch);
+window.addEventListener("DOMContentLoaded", testRecentSearch);
 
 /**
  * testFavorite
@@ -219,7 +246,14 @@ window.addEventListener('DOMContentLoaded', testRecentSearch);
  */
 function testFavorite() {
   const results = [];
-  const testApt = { id: '__harness_favorite_test__', name: '테스트아파트', dong: '101', area: 84.5, floor: 5, price: 90000 };
+  const testApt = {
+    id: "__harness_favorite_test__",
+    name: "테스트아파트",
+    dong: "101",
+    area: 84.5,
+    floor: 5,
+    price: 90000,
+  };
 
   FavoriteService.remove(testApt.id);
 
@@ -228,7 +262,9 @@ function testFavorite() {
   results.push(FavoriteService.isFavorite(testApt.id) === true);
 
   const afterDuplicateAdd = FavoriteService.add(testApt);
-  results.push(afterDuplicateAdd.filter((apt) => apt.id === testApt.id).length === 1);
+  results.push(
+    afterDuplicateAdd.filter((apt) => apt.id === testApt.id).length === 1,
+  );
 
   const afterToggleOff = FavoriteService.toggle(testApt);
   results.push(!afterToggleOff.some((apt) => apt.id === testApt.id));
@@ -237,20 +273,22 @@ function testFavorite() {
   const afterToggleOn = FavoriteService.toggle(testApt);
   results.push(afterToggleOn.some((apt) => apt.id === testApt.id));
 
-  const reloaded = FavoriteService.getAll().find((apt) => apt.id === testApt.id);
+  const reloaded = FavoriteService.getAll().find(
+    (apt) => apt.id === testApt.id,
+  );
   results.push(JSON.stringify(reloaded) === JSON.stringify(testApt));
 
   FavoriteService.remove(testApt.id);
   results.push(!FavoriteService.isFavorite(testApt.id));
 
   const allPassed = results.every((result) => result === true);
-  assert(allPassed, 'testFavorite: 추가/삭제/토글/중복방지/유지 확인');
+  assert(allPassed, "testFavorite: 추가/삭제/토글/중복방지/유지 확인");
   if (allPassed) {
-    console.log('PASS');
+    console.log("PASS");
   }
 }
 
-window.addEventListener('DOMContentLoaded', testFavorite);
+window.addEventListener("DOMContentLoaded", testFavorite);
 
 /**
  * resetUiWiringState
@@ -258,7 +296,9 @@ window.addEventListener('DOMContentLoaded', testFavorite);
  */
 function resetUiWiringState() {
   RecentSearchService.clear();
-  FavoriteService.getAll().forEach((apartment) => FavoriteService.remove(apartment.id));
+  FavoriteService.getAll().forEach((apartment) =>
+    FavoriteService.remove(apartment.id),
+  );
 }
 
 /**
@@ -296,41 +336,47 @@ async function testUiServiceWiring() {
   const results = [];
   resetUiWiringState();
 
-  const apartments = await mockProvider.searchApartment('');
+  const apartments = await mockProvider.searchApartment("");
   const [firstApt, secondApt] = apartments;
 
-  const container = document.createElement('div');
+  const container = document.createElement("div");
   initSearchApp(container);
-  const input = container.querySelector('.search-input');
-  const button = container.querySelector('.search-button');
+  const input = container.querySelector(".search-input");
+  const button = container.querySelector(".search-button");
 
   await performSearch(input, button, firstApt.aptName);
   results.push(RecentSearchService.getAll()[0] === firstApt.aptName);
-  results.push(container.querySelectorAll('.apartment-card').length > 0);
+  results.push(container.querySelectorAll(".apartment-card").length > 0);
 
   await performSearch(input, button, secondApt.aptName);
-  const recentItems = Array.from(container.querySelectorAll('.recent-search-item'));
-  const firstItem = recentItems.find((item) => item.textContent === firstApt.aptName);
+  const recentItems = Array.from(
+    container.querySelectorAll(".recent-search-item"),
+  );
+  const firstItem = recentItems.find(
+    (item) => item.textContent === firstApt.aptName,
+  );
   firstItem.click();
   await wait(100);
-  const titles = container.querySelectorAll('.apartment-card h3');
+  const titles = container.querySelectorAll(".apartment-card h3");
   results.push(titles.length > 0 && titles[0].textContent === firstApt.aptName);
 
-  const favoriteButton = container.querySelector('.favorite-button');
+  const favoriteButton = container.querySelector(".favorite-button");
   const beforeText = favoriteButton.textContent;
   favoriteButton.click();
   results.push(favoriteButton.textContent !== beforeText);
-  results.push(favoriteButton.classList.contains('is-favorite'));
+  results.push(favoriteButton.classList.contains("is-favorite"));
 
   resetUiWiringState();
 
   const allPassed = results.every((result) => result === true);
-  assert(allPassed, 'testUiServiceWiring: 검색/최근검색 클릭/즐겨찾기 UI 연결 확인');
+  assert(
+    allPassed,
+    "testUiServiceWiring: 검색/최근검색 클릭/즐겨찾기 UI 연결 확인",
+  );
   if (allPassed) {
-    console.log('PASS');
+    console.log("PASS");
   }
 }
-
 
 /**
  * findApartmentWithDeals
@@ -348,58 +394,218 @@ async function findApartmentWithDeals(apartments) {
 
 /**
  * testApartmentDetailWiring
- * 검색 결과 카드 클릭 시 getApartment()/getDeals()를 통해 단지 정보와
- * apartmentId로 연결된 거래내역이 상세 영역에 함께 렌더링되는지 검증한다.
+ * 검색 결과 카드 클릭 시 getDeals()를 통해 apartmentId로 연결된 거래내역이
+ * Accordion 패널에 렌더링되는지 검증한다.
+ * (기획 변경: Apartment Detail 영역은 더 이상 존재하지 않으며, 단지 정보는
+ * 카드 자체가 표현하므로 Accordion 안의 단지 정보 재렌더링은 검증하지 않는다.)
  * 모든 항목이 통과하면 'PASS'를 출력한다.
  */
 async function testApartmentDetailWiring() {
   const results = [];
   resetUiWiringState();
 
-  const apartments = await mockProvider.searchApartment('');
+  const apartments = await mockProvider.searchApartment("");
   const targetApt = await findApartmentWithDeals(apartments);
   if (!targetApt) {
-    assert(false, 'testApartmentDetailWiring: 거래내역이 있는 단지를 찾지 못함');
+    assert(
+      false,
+      "testApartmentDetailWiring: 거래내역이 있는 단지를 찾지 못함",
+    );
     return;
   }
 
-  const container = document.createElement('div');
+  const container = document.createElement("div");
   initSearchApp(container);
-  const input = container.querySelector('.search-input');
-  const button = container.querySelector('.search-button');
+  const input = container.querySelector(".search-input");
+  const button = container.querySelector(".search-button");
 
   await performSearch(input, button, targetApt.aptName);
-  const card = container.querySelector('.apartment-card');
+  const card = container.querySelector(".apartment-card");
   card.click();
   await wait(100);
 
-  const detail = container.querySelector('.apartment-detail');
+  const detail = container.querySelector(".apartment-detail");
   results.push(!!detail);
 
-  const detailTitle = detail ? detail.querySelector('h3') : null;
-  results.push(!!detailTitle && detailTitle.textContent === targetApt.aptName);
-
   const expectedDeals = await mockProvider.getDeals(targetApt.id);
-  const dealRows = detail ? detail.querySelectorAll('.deal-table tr') : [];
+  const dealRows = detail ? detail.querySelectorAll(".deal-table tr") : [];
   results.push(dealRows.length === expectedDeals.length + 1);
 
   resetUiWiringState();
 
   const allPassed = results.every((result) => result === true);
-  assert(allPassed, 'testApartmentDetailWiring: 단지 선택 시 단지정보/거래내역 연결 확인');
+  assert(
+    allPassed,
+    "testApartmentDetailWiring: 단지 선택 시 거래내역(Deals) 연결 확인",
+  );
   if (allPassed) {
-    console.log('PASS');
+    console.log("PASS");
+  }
+}
+
+/**
+ * testUI
+ * 디자인 개선 사항(style.css 로드, 주요 Card 렌더링, Hover/선택 Class 적용)을 검증한다.
+ * 모든 항목이 통과하면 'PASS'를 출력한다.
+ */
+async function testUI() {
+  const results = [];
+  resetUiWiringState();
+
+  const styleLink = document.querySelector('link[href="css/style.css"]');
+  results.push(!!styleLink);
+
+  const apartments = await mockProvider.searchApartment("");
+  const [firstApt, secondApt] = apartments;
+
+  const container = document.createElement("div");
+  initSearchApp(container);
+  const input = container.querySelector(".search-input");
+  const button = container.querySelector(".search-button");
+
+  await performSearch(input, button, firstApt.aptName);
+  const firstCard = container.querySelector(".apartment-card");
+  results.push(!!firstCard && firstCard.classList.contains("clickable"));
+
+  firstCard.click();
+  await wait(50);
+  results.push(firstCard.classList.contains("selected"));
+  results.push(!!container.querySelector(".favorite-button"));
+
+  await performSearch(input, button, secondApt.aptName);
+  const secondCard = container.querySelector(".apartment-card");
+  secondCard.click();
+  await wait(50);
+  results.push(secondCard.classList.contains("selected"));
+
+  resetUiWiringState();
+
+  const allPassed = results.every((result) => result === true);
+  assert(
+    allPassed,
+    "testUI: style.css 로드/Card 렌더링/Hover-Selected Class 확인",
+  );
+  if (allPassed) {
+    console.log("PASS");
+  }
+}
+
+/**
+ * findResultItemByName
+ * 검색 결과 목록(.result-item)에서 특정 단지명을 가진 항목을 찾는다.
+ * @param {HTMLElement} container - 검색 결과가 렌더링된 컨테이너
+ * @param {string} aptName - 찾을 단지명
+ * @returns {HTMLElement|null} 일치하는 result-item. 없으면 null
+ */
+function findResultItemByName(container, aptName) {
+  const items = Array.from(container.querySelectorAll(".result-item"));
+  return (
+    items.find((item) => {
+      const title = item.querySelector("h3");
+      return title && title.textContent === aptName;
+    }) || null
+  );
+}
+
+/**
+ * expandAccordionItem
+ * 카드를 클릭해 Accordion을 펼치고, 펼쳐짐/선택 표시와 apartmentId 기준
+ * 거래내역(Deals)이 올바르게 출력되는지 검증한 결과를 배열로 반환한다.
+ * (기획 변경: Apartment Detail 영역이 삭제되어 단지 정보 재렌더링은 검증하지 않는다.)
+ * @param {HTMLElement} card - 클릭할 단지 카드
+ * @param {HTMLElement} panel - 카드에 대응하는 Accordion 패널
+ * @param {Object} apartment - 대상 단지 정보
+ * @returns {Promise<Array<boolean>>} 검증 결과 배열
+ */
+async function expandAccordionItem(card, panel, apartment) {
+  const results = [];
+  card.click();
+  await wait(100);
+
+  results.push(panel.classList.contains("open"));
+  results.push(card.classList.contains("selected"));
+
+  const expectedDeals = await mockProvider.getDeals(apartment.id);
+  const dealRows = panel.querySelectorAll(".deal-table tr");
+  results.push(dealRows.length === expectedDeals.length + 1);
+
+  if (expectedDeals.length > 0) {
+    const firstRowCells = dealRows[1].querySelectorAll("td");
+    const priceCellText = firstRowCells[1]
+      ? firstRowCells[1].textContent
+      : null;
+    results.push(priceCellText === expectedDeals[0].price.toLocaleString());
+  }
+
+  return results;
+}
+
+/**
+ * testAccordion
+ * 검색 결과 카드의 Accordion 동작(Card 클릭 → Open, 같은 카드 재클릭 시 Close,
+ * 다른 카드 클릭 시 이전 Accordion Close)과 apartmentId 기준 거래내역(Deals)
+ * 렌더링을 검증한다. (Apartment Detail 영역은 더 이상 존재하지 않는다.)
+ * 모든 항목이 통과하면 'PASS'를 출력한다.
+ */
+async function testAccordion() {
+  resetUiWiringState();
+
+  const apartments = await mockProvider.searchApartment("");
+  const targetApt = await findApartmentWithDeals(apartments);
+  if (!targetApt) {
+    assert(false, "testAccordion: 거래내역이 있는 단지를 찾지 못함");
+    return;
+  }
+  const otherApt = apartments.find((apt) => apt.id !== targetApt.id);
+
+  const container = document.createElement("div");
+  initSearchApp(container);
+  const input = container.querySelector(".search-input");
+  const button = container.querySelector(".search-button");
+  await performSearch(input, button, "");
+
+  const targetItem = findResultItemByName(container, targetApt.aptName);
+  const targetCard = targetItem.querySelector(".apartment-card");
+  const targetPanel = targetItem.querySelector(".accordion-panel");
+
+  const results = await expandAccordionItem(targetCard, targetPanel, targetApt);
+
+  const otherItem = findResultItemByName(container, otherApt.aptName);
+  otherItem.querySelector(".apartment-card").click();
+  await wait(100);
+  results.push(!targetPanel.classList.contains("open"));
+  results.push(
+    otherItem.querySelector(".accordion-panel").classList.contains("open"),
+  );
+
+  otherItem.querySelector(".apartment-card").click();
+  await wait(100);
+  results.push(
+    !otherItem.querySelector(".accordion-panel").classList.contains("open"),
+  );
+  resetUiWiringState();
+
+  const allPassed = results.every((result) => result === true);
+  assert(
+    allPassed,
+    "testAccordion: Card 클릭/Open/apartmentId 매칭 거래내역/재클릭 Close/다른 카드 클릭 시 이전 Close 확인",
+  );
+  if (allPassed) {
+    console.log("PASS");
   }
 }
 
 /**
  * runUiWiringHarness
- * testUiServiceWiring과 testApartmentDetailWiring은 RecentSearchService/FavoriteService
- * 상태를 공유하므로, 동시 실행으로 인한 경쟁 상태를 막기 위해 순차적으로 실행한다.
+ * testUiServiceWiring/testApartmentDetailWiring/testUI/testAccordion은
+ * RecentSearchService/FavoriteService 상태를 공유하므로, 동시 실행으로 인한
+ * 경쟁 상태를 막기 위해 순차적으로 실행한다.
  */
 async function runUiWiringHarness() {
   await testUiServiceWiring();
   await testApartmentDetailWiring();
+  await testUI();
+  await testAccordion();
 }
 
-window.addEventListener('DOMContentLoaded', runUiWiringHarness);
+window.addEventListener("DOMContentLoaded", runUiWiringHarness);
