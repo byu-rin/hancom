@@ -2,7 +2,7 @@
   {
     "id": 1,
     "aptName": "SK뷰센트럴",
-    "address": "서울특별시 서초구 상계동 113",
+    "address": "서울특별시 서초구 방배동 113",
     "buildYear": 2017,
     "households": 2995,
     "constructor": "DL이앤씨",
@@ -15,7 +15,7 @@
   {
     "id": 2,
     "aptName": "센트레빌",
-    "address": "서울특별시 영등포구 반포동 629",
+    "address": "서울특별시 영등포구 여의도동 629",
     "buildYear": 2024,
     "households": 2579,
     "constructor": "현대건설",
@@ -28,7 +28,7 @@
   {
     "id": 3,
     "aptName": "래미안1단지",
-    "address": "서울특별시 서초구 여의도동 212",
+    "address": "서울특별시 서초구 서초동 212",
     "buildYear": 1998,
     "households": 3020,
     "constructor": "한화건설",
@@ -41,7 +41,7 @@
   {
     "id": 4,
     "aptName": "한신휴플러스리버뷰",
-    "address": "서울특별시 송파구 창신동 96",
+    "address": "서울특별시 송파구 잠실동 96",
     "buildYear": 1997,
     "households": 1862,
     "constructor": "대우건설",
@@ -54,7 +54,7 @@
   {
     "id": 5,
     "aptName": "센트레빌스퀘어",
-    "address": "서울특별시 영등포구 성수동 731",
+    "address": "서울특별시 성동구 성수동 731",
     "buildYear": 1999,
     "households": 349,
     "constructor": "현대건설",
@@ -67,7 +67,7 @@
   {
     "id": 6,
     "aptName": "한신휴플러스3단지",
-    "address": "서울특별시 송파구 반포동 362",
+    "address": "서울특별시 송파구 문정동 362",
     "buildYear": 2010,
     "households": 1385,
     "constructor": "현대건설",
@@ -80,7 +80,7 @@
   {
     "id": 7,
     "aptName": "한신휴플러스3단지",
-    "address": "서울특별시 마포구 여의도동 151",
+    "address": "서울특별시 마포구 연희동 151",
     "buildYear": 2017,
     "households": 2873,
     "constructor": "롯데건설",
@@ -93,7 +93,7 @@
   {
     "id": 8,
     "aptName": "롯데캐슬3단지",
-    "address": "서울특별시 용산구 반포동 248",
+    "address": "서울특별시 용산구 한남동 248",
     "buildYear": 1997,
     "households": 1396,
     "constructor": "HDC현대산업개발",
@@ -106,7 +106,7 @@
   {
     "id": 9,
     "aptName": "래미안센트럴",
-    "address": "서울특별시 종로구 잠실동 520",
+    "address": "서울특별시 종로구 창신동 520",
     "buildYear": 2013,
     "households": 2168,
     "constructor": "롯데건설",
@@ -145,7 +145,7 @@
   {
     "id": 12,
     "aptName": "래미안센트럴",
-    "address": "서울특별시 수원시 영통구 공덕동 382",
+    "address": "서울특별시 마포구 서교동 382",
     "buildYear": 2015,
     "households": 2571,
     "constructor": "현대건설",
@@ -158,7 +158,7 @@
   {
     "id": 13,
     "aptName": "디에이치포레",
-    "address": "서울특별시 송파구 삼성동 821",
+    "address": "서울특별시 강남구 삼성동 821",
     "buildYear": 2016,
     "households": 1931,
     "constructor": "현대건설",
@@ -171,7 +171,7 @@
   {
     "id": 14,
     "aptName": "래미안파크",
-    "address": "서울특별시 송파구 공덕동 632",
+    "address": "서울특별시 마포구 망원동 632",
     "buildYear": 2020,
     "households": 2917,
     "constructor": "DL이앤씨",
@@ -184,7 +184,7 @@
   {
     "id": 15,
     "aptName": "센트레빌센트럴",
-    "address": "서울특별시 고양시 일산동구 정자동 743",
+    "address": "서울특별시 동작구 상도동 743",
     "buildYear": 2009,
     "households": 2410,
     "constructor": "DL이앤씨",
@@ -197,7 +197,7 @@
   {
     "id": 16,
     "aptName": "한신휴플러스1단지",
-    "address": "서울특별시 서초구 장항동 566",
+    "address": "서울특별시 서초구 서초동 566",
     "buildYear": 1996,
     "households": 2061,
     "constructor": "DL이앤씨",
@@ -210,7 +210,7 @@
   {
     "id": 17,
     "aptName": "더샵스퀘어",
-    "address": "서울특별시 노원구 정자동 760",
+    "address": "서울특별시 성동구 송정동 760",
     "buildYear": 2011,
     "households": 1332,
     "constructor": "SK에코플랜트",
@@ -223,7 +223,7 @@
   {
     "id": 18,
     "aptName": "e편한세상3단지",
-    "address": "서울특별시 강남구 창신동 448",
+    "address": "서울특별시 강남구 개포동 448",
     "buildYear": 2020,
     "households": 3162,
     "constructor": "포스코이앤씨",
@@ -236,7 +236,7 @@
   {
     "id": 19,
     "aptName": "롯데캐슬2단지",
-    "address": "서울특별시 분당구 창신동 172",
+    "address": "서울특별시 용산구 이태원동 172",
     "buildYear": 2015,
     "households": 2258,
     "constructor": "한화건설",
@@ -249,7 +249,7 @@
   {
     "id": 20,
     "aptName": "e편한세상",
-    "address": "서울특별시 송파구 창신동 712",
+    "address": "서울특별시 송파구 장지동 712",
     "buildYear": 2018,
     "households": 1594,
     "constructor": "GS건설",
@@ -262,7 +262,7 @@
   {
     "id": 21,
     "aptName": "e편한세상포레",
-    "address": "서울특별시 용산구 반포동 937",
+    "address": "서울특별시 강남구 반포동 937",
     "buildYear": 2014,
     "households": 1162,
     "constructor": "GS건설",
@@ -275,7 +275,7 @@
   {
     "id": 22,
     "aptName": "래미안센트럴",
-    "address": "서울특별시 종로구 성수동 285",
+    "address": "서울특별시 중구 입정동 285",
     "buildYear": 2016,
     "households": 2482,
     "constructor": "HDC현대산업개발",
@@ -288,7 +288,7 @@
   {
     "id": 23,
     "aptName": "아이파크2단지",
-    "address": "서울특별시 수원시 영통구 반포동 904",
+    "address": "서울특별시 영등포구 문래동 904",
     "buildYear": 1995,
     "households": 1020,
     "constructor": "SK에코플랜트",
@@ -301,7 +301,7 @@
   {
     "id": 24,
     "aptName": "e편한세상",
-    "address": "서울특별시 수원시 영통구 성수동 847",
+    "address": "서울특별시 성북구 삼선동 847",
     "buildYear": 1999,
     "households": 2991,
     "constructor": "DL이앤씨",
@@ -314,7 +314,7 @@
   {
     "id": 25,
     "aptName": "푸르지오포레",
-    "address": "서울특별시 강남구 정자동 992",
+    "address": "서울특별시 강남구 논현동 992",
     "buildYear": 2013,
     "households": 2917,
     "constructor": "GS건설",
@@ -327,7 +327,7 @@
   {
     "id": 26,
     "aptName": "아이파크1단지",
-    "address": "서울특별시 송파구 여의도동 968",
+    "address": "서울특별시 송파구 석촌동 968",
     "buildYear": 2001,
     "households": 2403,
     "constructor": "GS건설",
@@ -340,7 +340,7 @@
   {
     "id": 27,
     "aptName": "롯데캐슬2단지",
-    "address": "서울특별시 용산구 잠실동 973",
+    "address": "서울특별시 송파구 잠실동 973",
     "buildYear": 2004,
     "households": 1815,
     "constructor": "삼성물산",
@@ -353,7 +353,7 @@
   {
     "id": 28,
     "aptName": "힐스테이트포레",
-    "address": "서울특별시 분당구 이촌동 180",
+    "address": "서울특별시 용산구 이촌동 180",
     "buildYear": 2016,
     "households": 2843,
     "constructor": "HDC현대산업개발",
@@ -366,7 +366,7 @@
   {
     "id": 29,
     "aptName": "힐스테이트",
-    "address": "서울특별시 마포구 성수동 152",
+    "address": "서울특별시 마포구 상수동 152",
     "buildYear": 2001,
     "households": 1173,
     "constructor": "HDC현대산업개발",
@@ -379,7 +379,7 @@
   {
     "id": 30,
     "aptName": "더샵센트럴",
-    "address": "서울특별시 서초구 정자동 133",
+    "address": "서울특별시 서초구 서초동 133",
     "buildYear": 2021,
     "households": 2051,
     "constructor": "롯데건설",
@@ -392,7 +392,7 @@
   {
     "id": 31,
     "aptName": "e편한세상2단지",
-    "address": "서울특별시 성동구 반포동 996",
+    "address": "서울특별시 성동구 왕십리동 996",
     "buildYear": 2008,
     "households": 1709,
     "constructor": "한화건설",
@@ -405,7 +405,7 @@
   {
     "id": 32,
     "aptName": "푸르지오센트럴",
-    "address": "서울특별시 용산구 창신동 282",
+    "address": "서울특별시 용산구 문배동 282",
     "buildYear": 1995,
     "households": 2550,
     "constructor": "현대건설",
@@ -418,7 +418,7 @@
   {
     "id": 33,
     "aptName": "힐스테이트1단지",
-    "address": "서울특별시 분당구 잠실동 205",
+    "address": "서울특별시 성북구 안암동 205",
     "buildYear": 2017,
     "households": 2267,
     "constructor": "포스코이앤씨",
@@ -431,7 +431,7 @@
   {
     "id": 34,
     "aptName": "아이파크스퀘어",
-    "address": "서울특별시 고양시 일산동구 장항동 128",
+    "address": "서울특별시 노원구 월계동 128",
     "buildYear": 2023,
     "households": 993,
     "constructor": "현대건설",
@@ -444,7 +444,7 @@
   {
     "id": 35,
     "aptName": "센트레빌",
-    "address": "서울특별시 노원구 공덕동 787",
+    "address": "서울특별시 노원구 월계동 787",
     "buildYear": 1999,
     "households": 546,
     "constructor": "SK에코플랜트",
@@ -470,7 +470,7 @@
   {
     "id": 37,
     "aptName": "자이1단지",
-    "address": "서울특별시 분당구 성수동 761",
+    "address": "서울특별시 성동구 성수동 761",
     "buildYear": 2019,
     "households": 1169,
     "constructor": "대우건설",
@@ -496,7 +496,7 @@
   {
     "id": 39,
     "aptName": "힐스테이트2단지",
-    "address": "서울특별시 고양시 일산동구 반포동 576",
+    "address": "서울특별시 일산동구 반포동 576",
     "buildYear": 2020,
     "households": 3121,
     "constructor": "포스코이앤씨",
@@ -509,7 +509,7 @@
   {
     "id": 40,
     "aptName": "아이파크3단지",
-    "address": "서울특별시 분당구 삼성동 465",
+    "address": "서울특별시 강남구 삼성동 465",
     "buildYear": 2016,
     "households": 780,
     "constructor": "DL이앤씨",
@@ -522,7 +522,7 @@
   {
     "id": 41,
     "aptName": "힐스테이트3단지",
-    "address": "서울특별시 종로구 반포동 903",
+    "address": "서울특별시 강남구 반포동 903",
     "buildYear": 2008,
     "households": 2017,
     "constructor": "한화건설",
@@ -535,7 +535,7 @@
   {
     "id": 42,
     "aptName": "e편한세상리버뷰",
-    "address": "서울특별시 서초구 공덕동 548",
+    "address": "서울특별시 강남구 선릉동 548",
     "buildYear": 2009,
     "households": 2111,
     "constructor": "현대건설",
@@ -548,7 +548,7 @@
   {
     "id": 43,
     "aptName": "디에이치2단지",
-    "address": "서울특별시 강남구 창신동 682",
+    "address": "서울특별시 강남구 논현동동 682",
     "buildYear": 2008,
     "households": 1019,
     "constructor": "SK에코플랜트",
@@ -574,7 +574,7 @@
   {
     "id": 45,
     "aptName": "자이센트럴",
-    "address": "서울특별시 고양시 일산동구 삼성동 350",
+    "address": "서울특별시 강남구 삼성동 350",
     "buildYear": 2003,
     "households": 2035,
     "constructor": "현대건설",
@@ -587,7 +587,7 @@
   {
     "id": 46,
     "aptName": "푸르지오파크",
-    "address": "서울특별시 마포구 이촌동 391",
+    "address": "서울특별시 마포구 연희동 391",
     "buildYear": 1999,
     "households": 2197,
     "constructor": "HDC현대산업개발",
@@ -626,7 +626,7 @@
   {
     "id": 49,
     "aptName": "래미안",
-    "address": "서울특별시 서초구 장항동 442",
+    "address": "서울특별시 서초구 서초동 442",
     "buildYear": 2006,
     "households": 260,
     "constructor": "롯데건설",
@@ -639,7 +639,7 @@
   {
     "id": 50,
     "aptName": "센트레빌리버뷰",
-    "address": "서울특별시 서초구 이촌동 355",
+    "address": "서울특별시 서초구 서초동 355",
     "buildYear": 2011,
     "households": 1605,
     "constructor": "현대건설",
@@ -652,7 +652,7 @@
   {
     "id": 51,
     "aptName": "롯데캐슬리버뷰",
-    "address": "서울특별시 용산구 삼성동 968",
+    "address": "서울특별시 용산구 이태원동 968",
     "buildYear": 1996,
     "households": 2223,
     "constructor": "대우건설",
@@ -665,7 +665,7 @@
   {
     "id": 52,
     "aptName": "푸르지오파크",
-    "address": "서울특별시 수원시 영통구 반포동 684",
+    "address": "서울특별시 강남구 반포동 684",
     "buildYear": 2009,
     "households": 2457,
     "constructor": "GS건설",
@@ -678,7 +678,7 @@
   {
     "id": 53,
     "aptName": "센트레빌스퀘어",
-    "address": "서울특별시 분당구 잠실동 698",
+    "address": "서울특별시 송파구 잠실동 698",
     "buildYear": 2002,
     "households": 1803,
     "constructor": "DL이앤씨",
@@ -691,7 +691,7 @@
   {
     "id": 54,
     "aptName": "아이파크파크",
-    "address": "서울특별시 성동구 역삼동 549",
+    "address": "서울특별시 강남구 역삼동 549",
     "buildYear": 2004,
     "households": 2036,
     "constructor": "포스코이앤씨",
@@ -717,7 +717,7 @@
   {
     "id": 56,
     "aptName": "자이2단지",
-    "address": "서울특별시 송파구 정자동 29",
+    "address": "서울특별시 송파구 왕십리동 29",
     "buildYear": 1995,
     "households": 1005,
     "constructor": "대우건설",
@@ -743,7 +743,7 @@
   {
     "id": 58,
     "aptName": "롯데캐슬3단지",
-    "address": "서울특별시 용산구 성수동 925",
+    "address": "서울특별시 용산구 이태원동 925",
     "buildYear": 2007,
     "households": 342,
     "constructor": "삼성물산",
@@ -756,7 +756,7 @@
   {
     "id": 59,
     "aptName": "디에이치파크",
-    "address": "서울특별시 용산구 상계동 47",
+    "address": "서울특별시 용산구 창신동 47",
     "buildYear": 2005,
     "households": 1213,
     "constructor": "대우건설",
@@ -769,7 +769,7 @@
   {
     "id": 60,
     "aptName": "SK뷰",
-    "address": "서울특별시 서초구 상계동 340",
+    "address": "서울특별시 서초구 서초동 340",
     "buildYear": 2012,
     "households": 1761,
     "constructor": "포스코이앤씨",
@@ -795,7 +795,7 @@
   {
     "id": 62,
     "aptName": "더샵리버뷰",
-    "address": "서울특별시 분당구 역삼동 594",
+    "address": "서울특별시 강남구 역삼동 594",
     "buildYear": 2008,
     "households": 2405,
     "constructor": "대우건설",
@@ -821,7 +821,7 @@
   {
     "id": 64,
     "aptName": "래미안파크",
-    "address": "서울특별시 서초구 정자동 251",
+    "address": "서울특별시 서초구 신원동 251",
     "buildYear": 2024,
     "households": 201,
     "constructor": "한화건설",
@@ -834,7 +834,7 @@
   {
     "id": 65,
     "aptName": "푸르지오",
-    "address": "서울특별시 수원시 영통구 상계동 977",
+    "address": "서울특별시 노원구 상계동 977",
     "buildYear": 1997,
     "households": 2400,
     "constructor": "GS건설",
@@ -847,7 +847,7 @@
   {
     "id": 66,
     "aptName": "한신휴플러스스퀘어",
-    "address": "서울특별시 서초구 공덕동 30",
+    "address": "서울특별시 마포구 공덕동 30",
     "buildYear": 1995,
     "households": 2261,
     "constructor": "포스코이앤씨",
@@ -860,7 +860,7 @@
   {
     "id": 67,
     "aptName": "e편한세상3단지",
-    "address": "서울특별시 종로구 여의도동 353",
+    "address": "서울특별시 중구 주교동 353",
     "buildYear": 1999,
     "households": 2482,
     "constructor": "SK에코플랜트",
@@ -886,7 +886,7 @@
   {
     "id": 69,
     "aptName": "더샵스퀘어",
-    "address": "서울특별시 송파구 성수동 728",
+    "address": "서울특별시 성동구 성수동 728",
     "buildYear": 2004,
     "households": 724,
     "constructor": "롯데건설",
@@ -899,7 +899,7 @@
   {
     "id": 70,
     "aptName": "아이파크포레",
-    "address": "서울특별시 고양시 일산동구 창신동 425",
+    "address": "서울특별시 용산구 창신동 425",
     "buildYear": 1995,
     "households": 1871,
     "constructor": "DL이앤씨",
@@ -912,7 +912,7 @@
   {
     "id": 71,
     "aptName": "힐스테이트3단지",
-    "address": "서울특별시 고양시 일산동구 이촌동 963",
+    "address": "서울특별시 용산구 이촌동 963",
     "buildYear": 1996,
     "households": 1000,
     "constructor": "대우건설",
@@ -925,7 +925,7 @@
   {
     "id": 72,
     "aptName": "한신휴플러스센트럴",
-    "address": "서울특별시 마포구 여의도동 816",
+    "address": "서울특별시 마포구 상수동 816",
     "buildYear": 2015,
     "households": 1080,
     "constructor": "현대건설",
@@ -938,7 +938,7 @@
   {
     "id": 73,
     "aptName": "더샵2단지",
-    "address": "서울특별시 수원시 영통구 이촌동 987",
+    "address": "서울특별시 한남동 이촌동 987",
     "buildYear": 2024,
     "households": 1787,
     "constructor": "한화건설",
@@ -951,7 +951,7 @@
   {
     "id": 74,
     "aptName": "래미안센트럴",
-    "address": "서울특별시 영등포구 잠실동 871",
+    "address": "서울특별시 영등포구 문래동 871",
     "buildYear": 2017,
     "households": 3027,
     "constructor": "롯데건설",
@@ -964,7 +964,7 @@
   {
     "id": 75,
     "aptName": "래미안센트럴",
-    "address": "서울특별시 수원시 영통구 이촌동 665",
+    "address": "서울특별시 중구 명동 665",
     "buildYear": 1999,
     "households": 2235,
     "constructor": "HDC현대산업개발",
@@ -990,7 +990,7 @@
   {
     "id": 77,
     "aptName": "자이1단지",
-    "address": "서울특별시 강남구 상계동 382",
+    "address": "서울특별시 강남구 선릉동 382",
     "buildYear": 2011,
     "households": 2954,
     "constructor": "대우건설",
@@ -1003,7 +1003,7 @@
   {
     "id": 78,
     "aptName": "아이파크3단지",
-    "address": "서울특별시 송파구 상계동 459",
+    "address": "서울특별시 송파구 문정동 459",
     "buildYear": 2001,
     "households": 649,
     "constructor": "한화건설",
@@ -1016,7 +1016,7 @@
   {
     "id": 79,
     "aptName": "아이파크",
-    "address": "서울특별시 용산구 정자동 687",
+    "address": "서울특별시 용산구 이태원동 687",
     "buildYear": 2014,
     "households": 2398,
     "constructor": "한화건설",
@@ -1029,7 +1029,7 @@
   {
     "id": 80,
     "aptName": "더샵1단지",
-    "address": "서울특별시 서초구 장항동 261",
+    "address": "서울특별시 서초구 서초동 261",
     "buildYear": 2002,
     "households": 1120,
     "constructor": "GS건설",
@@ -1042,7 +1042,7 @@
   {
     "id": 81,
     "aptName": "센트레빌2단지",
-    "address": "서울특별시 분당구 삼성동 153",
+    "address": "서울특별시 강남구 삼성동 153",
     "buildYear": 2022,
     "households": 770,
     "constructor": "한화건설",
@@ -1055,7 +1055,7 @@
   {
     "id": 82,
     "aptName": "센트레빌1단지",
-    "address": "서울특별시 분당구 장항동 173",
+    "address": "서울특별시 중구 장항동 173",
     "buildYear": 2011,
     "households": 873,
     "constructor": "HDC현대산업개발",
@@ -1081,7 +1081,7 @@
   {
     "id": 84,
     "aptName": "아이파크2단지",
-    "address": "서울특별시 고양시 일산동구 잠실동 170",
+    "address": "서울특별시 송파구 잠실동 170",
     "buildYear": 2005,
     "households": 542,
     "constructor": "한화건설",
@@ -1094,7 +1094,7 @@
   {
     "id": 85,
     "aptName": "SK뷰리버뷰",
-    "address": "서울특별시 서초구 잠실동 658",
+    "address": "서울특별시 송파구 잠실동 658",
     "buildYear": 1997,
     "households": 501,
     "constructor": "현대건설",
@@ -1107,7 +1107,7 @@
   {
     "id": 86,
     "aptName": "아이파크1단지",
-    "address": "서울특별시 분당구 창신동 992",
+    "address": "서울특별시 중구 명동 992",
     "buildYear": 1995,
     "households": 1418,
     "constructor": "GS건설",
@@ -1120,7 +1120,7 @@
   {
     "id": 87,
     "aptName": "SK뷰스퀘어",
-    "address": "서울특별시 용산구 반포동 705",
+    "address": "서울특별시 강남구 반포동 705",
     "buildYear": 2010,
     "households": 635,
     "constructor": "HDC현대산업개발",
@@ -1133,7 +1133,7 @@
   {
     "id": 88,
     "aptName": "한신휴플러스센트럴",
-    "address": "서울특별시 분당구 창신동 295",
+    "address": "서울특별시 중구 창신동 295",
     "buildYear": 2001,
     "households": 3110,
     "constructor": "GS건설",
@@ -1146,7 +1146,7 @@
   {
     "id": 89,
     "aptName": "아이파크3단지",
-    "address": "서울특별시 송파구 공덕동 399",
+    "address": "서울특별시 마포구 공덕동 399",
     "buildYear": 2001,
     "households": 271,
     "constructor": "SK에코플랜트",
@@ -1159,7 +1159,7 @@
   {
     "id": 90,
     "aptName": "푸르지오",
-    "address": "서울특별시 수원시 영통구 성수동 141",
+    "address": "서울특별시 성동구 성수동 141",
     "buildYear": 1998,
     "households": 2048,
     "constructor": "GS건설",
@@ -1172,7 +1172,7 @@
   {
     "id": 91,
     "aptName": "롯데캐슬센트럴",
-    "address": "서울특별시 고양시 일산동구 창신동 765",
+    "address": "서울특별시 중구 창신동 765",
     "buildYear": 2020,
     "households": 1605,
     "constructor": "한화건설",
@@ -1185,7 +1185,7 @@
   {
     "id": 92,
     "aptName": "롯데캐슬2단지",
-    "address": "서울특별시 종로구 공덕동 937",
+    "address": "서울특별시 종로구 삼청동 937",
     "buildYear": 2008,
     "households": 3114,
     "constructor": "GS건설",
@@ -1198,7 +1198,7 @@
   {
     "id": 93,
     "aptName": "래미안포레",
-    "address": "서울특별시 강남구 정자동 590",
+    "address": "서울특별시 강남구 삼성동 590",
     "buildYear": 2013,
     "households": 892,
     "constructor": "HDC현대산업개발",
@@ -1211,7 +1211,7 @@
   {
     "id": 94,
     "aptName": "자이센트럴",
-    "address": "서울특별시 노원구 잠실동 212",
+    "address": "서울특별시 송파구 잠실동 212",
     "buildYear": 2006,
     "households": 2488,
     "constructor": "SK에코플랜트",
@@ -1276,7 +1276,7 @@
   {
     "id": 99,
     "aptName": "아이파크",
-    "address": "서울특별시 용산구 정자동 510",
+    "address": "서울특별시 용산구 한남동 510",
     "buildYear": 2014,
     "households": 2861,
     "constructor": "포스코이앤씨",
@@ -1289,7 +1289,7 @@
   {
     "id": 100,
     "aptName": "래미안센트럴",
-    "address": "서울특별시 수원시 영통구 정자동 361",
+    "address": "서울특별시 노원구 상계동 361",
     "buildYear": 2018,
     "households": 489,
     "constructor": "삼성물산",

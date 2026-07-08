@@ -18,7 +18,7 @@ async function runUiHarness() {
   const apartments = await mockProvider.searchApartment("");
   if (apartments.length === 0) return;
 
-  // const firstApartment = apartments[0];
+  const firstApartment = apartments[0];
   // const deals = await mockProvider.getDeals(firstApartment.id);
 
   const cardSection = document.createElement("section");
@@ -394,8 +394,10 @@ async function findApartmentWithDeals(apartments) {
 
 /**
  * testApartmentDetailWiring
- * 검색 결과 카드 클릭 시 getApartment()/getDeals()를 통해 단지 정보와
- * apartmentId로 연결된 거래내역이 상세 영역에 함께 렌더링되는지 검증한다.
+ * 검색 결과 카드 클릭 시 getDeals()를 통해 apartmentId로 연결된 거래내역이
+ * Accordion 패널에 렌더링되는지 검증한다.
+ * (기획 변경: Apartment Detail 영역은 더 이상 존재하지 않으며, 단지 정보는
+ * 카드 자체가 표현하므로 Accordion 안의 단지 정보 재렌더링은 검증하지 않는다.)
  * 모든 항목이 통과하면 'PASS'를 출력한다.
  */
 async function testApartmentDetailWiring() {
@@ -425,9 +427,6 @@ async function testApartmentDetailWiring() {
   const detail = container.querySelector(".apartment-detail");
   results.push(!!detail);
 
-  const detailTitle = detail ? detail.querySelector("h3") : null;
-  results.push(!!detailTitle && detailTitle.textContent === targetApt.aptName);
-
   const expectedDeals = await mockProvider.getDeals(targetApt.id);
   const dealRows = detail ? detail.querySelectorAll(".deal-table tr") : [];
   results.push(dealRows.length === expectedDeals.length + 1);
@@ -437,7 +436,7 @@ async function testApartmentDetailWiring() {
   const allPassed = results.every((result) => result === true);
   assert(
     allPassed,
-    "testApartmentDetailWiring: 단지 선택 시 단지정보/거래내역 연결 확인",
+    "testApartmentDetailWiring: 단지 선택 시 거래내역(Deals) 연결 확인",
   );
   if (allPassed) {
     console.log("PASS");
@@ -510,8 +509,9 @@ function findResultItemByName(container, aptName) {
 
 /**
  * expandAccordionItem
- * 카드를 클릭해 Accordion을 펼치고, 펼쳐짐/선택 표시/단지정보/거래내역이
- * 올바르게 출력되는지 검증한 결과를 배열로 반환한다.
+ * 카드를 클릭해 Accordion을 펼치고, 펼쳐짐/선택 표시와 apartmentId 기준
+ * 거래내역(Deals)이 올바르게 출력되는지 검증한 결과를 배열로 반환한다.
+ * (기획 변경: Apartment Detail 영역이 삭제되어 단지 정보 재렌더링은 검증하지 않는다.)
  * @param {HTMLElement} card - 클릭할 단지 카드
  * @param {HTMLElement} panel - 카드에 대응하는 Accordion 패널
  * @param {Object} apartment - 대상 단지 정보
@@ -525,22 +525,26 @@ async function expandAccordionItem(card, panel, apartment) {
   results.push(panel.classList.contains("open"));
   results.push(card.classList.contains("selected"));
 
-  const detailTitle = panel.querySelector(".apartment-detail h3");
-  results.push(!!detailTitle && detailTitle.textContent === apartment.aptName);
-
   const expectedDeals = await mockProvider.getDeals(apartment.id);
-  results.push(
-    panel.querySelectorAll(".deal-table tr").length ===
-      expectedDeals.length + 1,
-  );
+  const dealRows = panel.querySelectorAll(".deal-table tr");
+  results.push(dealRows.length === expectedDeals.length + 1);
+
+  if (expectedDeals.length > 0) {
+    const firstRowCells = dealRows[1].querySelectorAll("td");
+    const priceCellText = firstRowCells[1]
+      ? firstRowCells[1].textContent
+      : null;
+    results.push(priceCellText === expectedDeals[0].price.toLocaleString());
+  }
 
   return results;
 }
 
 /**
  * testAccordion
- * 검색 결과 카드의 Accordion 동작(펼침/다시 클릭 시 닫힘/다른 카드 클릭 시
- * 이전 카드 닫힘)과 단지 정보·거래내역 출력을 검증한다.
+ * 검색 결과 카드의 Accordion 동작(Card 클릭 → Open, 같은 카드 재클릭 시 Close,
+ * 다른 카드 클릭 시 이전 Accordion Close)과 apartmentId 기준 거래내역(Deals)
+ * 렌더링을 검증한다. (Apartment Detail 영역은 더 이상 존재하지 않는다.)
  * 모든 항목이 통과하면 'PASS'를 출력한다.
  */
 async function testAccordion() {
@@ -584,7 +588,7 @@ async function testAccordion() {
   const allPassed = results.every((result) => result === true);
   assert(
     allPassed,
-    "testAccordion: 펼침/닫힘/다른 카드 클릭 시 이전 카드 닫힘/단지정보/거래내역 확인",
+    "testAccordion: Card 클릭/Open/apartmentId 매칭 거래내역/재클릭 Close/다른 카드 클릭 시 이전 Close 확인",
   );
   if (allPassed) {
     console.log("PASS");

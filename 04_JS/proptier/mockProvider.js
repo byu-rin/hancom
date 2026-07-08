@@ -7,11 +7,33 @@
  * apiProvider.js와 동일한 인터페이스를 구현하여 service.js에서 교체 가능하도록 한다.
  */
 
+/** @type {string} apartments.json 경로 (index.html 기준 상대경로) */
+const APARTMENTS_URL = './data/apartments.json';
+
+/** @type {string} deals.json 경로 (index.html 기준 상대경로) */
+const DEALS_URL = './data/deals.json';
+
 /** @type {Array<Object>|null} apartments.json fetch 결과 캐시 */
 let apartmentsCache = null;
 
 /** @type {Array<Object>|null} deals.json fetch 결과 캐시 */
 let dealsCache = null;
+
+/**
+ * fetchJson
+ * 지정한 URL을 fetch로 읽어 JSON으로 파싱한다.
+ * 예외가 발생해도 앱이 종료되지 않도록 빈 배열을 반환한다.
+ * @param {string} url - 조회할 JSON 파일 경로
+ * @returns {Promise<Array<Object>>} 파싱된 JSON 배열. 실패 시 빈 배열
+ */
+async function fetchJson(url) {
+  try {
+    const response = await fetch(url);
+    return await response.json();
+  } catch (error) {
+    return [];
+  }
+}
 
 /**
  * fetchApartments
@@ -20,13 +42,8 @@ let dealsCache = null;
  */
 async function fetchApartments() {
   if (apartmentsCache) return apartmentsCache;
-  try {
-    const response = await fetch('./data/apartments.json');
-    apartmentsCache = await response.json();
-    return apartmentsCache;
-  } catch (error) {
-    return [];
-  }
+  apartmentsCache = await fetchJson(APARTMENTS_URL);
+  return apartmentsCache;
 }
 
 /**
@@ -36,13 +53,8 @@ async function fetchApartments() {
  */
 async function fetchDeals() {
   if (dealsCache) return dealsCache;
-  try {
-    const response = await fetch('./data/deals.json');
-    dealsCache = await response.json();
-    return dealsCache;
-  } catch (error) {
-    return [];
-  }
+  dealsCache = await fetchJson(DEALS_URL);
+  return dealsCache;
 }
 
 /**
