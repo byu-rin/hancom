@@ -75,8 +75,7 @@ body {
 
 /* 최근 검색: 자체 카드 영역, 파스텔 오렌지 */
 .recent-search-container,
-.search-result-container,
-.apartment-detail-container {
+.search-result-container {
   flex: 1 1 100%;
   margin-top: 8px;
 }
@@ -135,6 +134,25 @@ body {
 .apartment-card.selected {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 2px rgba(110, 142, 174, 0.35);
+}
+
+/* Accordion: 카드 아래에 단지 정보 + 거래내역이 펼쳐지는 영역 */
+.result-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.accordion-panel {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
+}
+
+.accordion-panel.open {
+  max-height: 2000px;
+  opacity: 1;
+  margin-top: 16px;
 }
 
 .apartment-card h3 {
