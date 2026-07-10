@@ -9,6 +9,8 @@ import Counter from "./components/Counter.jsx";
 import Counter2 from "./components/Counter2.jsx";
 import NameForm from "./components/NameForm.jsx";
 import ProductItem from "./components/ProductItem.jsx";
+import Hello from "./components/Hello.jsx";
+import Clock from "./components/Clock.jsx";
 
 import "./App.css";
 
@@ -78,6 +80,12 @@ const App = () => {
       <br></br>
       <br></br>
       <ProductItem name="팔찌" />
+      <br></br>
+      <br></br>
+      <Hello />
+      <br></br>
+      <br></br>
+      <Clock />
     </>
   );
 };
