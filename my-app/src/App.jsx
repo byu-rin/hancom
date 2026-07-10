@@ -2,6 +2,11 @@ import { useState } from "react";
 import Avatar from "./components/Avatar.jsx";
 import Badge from "./components/Badge.jsx";
 import Alert from "./components/Alert.jsx";
+import Rating from "./components/Rating.jsx";
+import Tag from "./components/Tag.jsx";
+import SubmitButton from "./components/SubmitButton";
+import Counter from "./components/Counter";
+
 import "./App.css";
 
 const App = () => {
@@ -19,6 +24,8 @@ const App = () => {
     warning: "주의하세요",
   };
   const currentText = textMapping[alertType];
+
+  const list = ["react", "props", "map"];
 
   return (
     <>
@@ -40,7 +47,6 @@ const App = () => {
         type={currentType}
         onToggle={(clickedType) => setCurrentType(clickedType)}
       />
-
       <br></br>
       <br></br>
       <Alert
@@ -48,6 +54,18 @@ const App = () => {
         text={currentText}
         onToggle={(clickedType) => setAlertType(clickedType)}
       />
+      <br></br>
+      <br></br>
+      <Rating score={3} />
+      <br></br>
+      <br></br>
+      <Tag tags={list} />
+      <br></br>
+      <br></br>
+      <SubmitButton />
+      <br></br>
+      <br></br>
+      <Counter />
     </>
   );
 };
