@@ -8,6 +8,7 @@ import SubmitButton from "./components/SubmitButton";
 import Counter from "./components/Counter.jsx";
 import Counter2 from "./components/Counter2.jsx";
 import NameForm from "./components/NameForm.jsx";
+import ProductItem from "./components/ProductItem.jsx";
 
 import "./App.css";
 
@@ -74,6 +75,9 @@ const App = () => {
       <br></br>
       <br></br>
       <NameForm />
+      <br></br>
+      <br></br>
+      <ProductItem name="팔찌" />
     </>
   );
 };
