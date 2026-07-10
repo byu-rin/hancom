@@ -11,6 +11,8 @@ import NameForm from "./components/NameForm.jsx";
 import ProductItem from "./components/ProductItem.jsx";
 import Hello from "./components/Hello.jsx";
 import Clock from "./components/Clock.jsx";
+import Every from "./components/Every.jsx";
+import Users from "./components/Users.jsx";
 
 import "./App.css";
 
@@ -86,6 +88,12 @@ const App = () => {
       <br></br>
       <br></br>
       <Clock />
+      <br></br>
+      <br></br>
+      <Every />
+      <br></br>
+      <br></br>
+      <Users />
     </>
   );
 };
