@@ -13,6 +13,7 @@ import Hello from "./components/Hello.jsx";
 import Clock from "./components/Clock.jsx";
 import Every from "./components/Every.jsx";
 import Users from "./components/Users.jsx";
+import Weather from "./components/Weather.jsx";
 
 import "./App.css";
 
@@ -94,6 +95,9 @@ const App = () => {
       <br></br>
       <br></br>
       <Users />
+      <br></br>
+      <br></br>
+      <Weather />
     </>
   );
 };
