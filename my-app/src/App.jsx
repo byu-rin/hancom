@@ -5,7 +5,9 @@ import Alert from "./components/Alert.jsx";
 import Rating from "./components/Rating.jsx";
 import Tag from "./components/Tag.jsx";
 import SubmitButton from "./components/SubmitButton";
-import Counter from "./components/Counter";
+import Counter from "./components/Counter.jsx";
+import Counter2 from "./components/Counter2.jsx";
+import NameForm from "./components/NameForm.jsx";
 
 import "./App.css";
 
@@ -66,6 +68,12 @@ const App = () => {
       <br></br>
       <br></br>
       <Counter />
+      <br></br>
+      <br></br>
+      <Counter2 />
+      <br></br>
+      <br></br>
+      <NameForm />
     </>
   );
 };
