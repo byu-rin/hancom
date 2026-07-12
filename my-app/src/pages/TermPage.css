@@ -1,0 +1,61 @@
+.term-page {
+  padding: 40px 24px 64px;
+  text-align: left;
+}
+
+/* 본문이 너무 넓어지지 않게 폭 제한 + 가운데 배치 */
+.term-detail {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* 분류 뱃지 (알약 모양) */
+.term-category {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+}
+
+.term-title {
+  font-size: 40px;
+  letter-spacing: -1px;
+  margin: 16px 0;
+}
+
+.term-description {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+/* 예시 코드 상자 */
+.term-example {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--code-bg);
+  line-height: 1.8;
+}
+
+/* 목록/홈으로 돌아가는 링크 (정상 화면 + 에러 화면 공용) */
+.back-link {
+  display: inline-block;
+  margin-top: 24px;
+  color: var(--accent);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+/* 없는 용어로 들어왔을 때 안내 화면 */
+.term-page-error {
+  padding: 80px 24px;
+}

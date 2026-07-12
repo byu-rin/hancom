@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import Avatar from "./components/Avatar.jsx";
 import Badge from "./components/Badge.jsx";
 import Alert from "./components/Alert.jsx";
@@ -14,7 +15,11 @@ import Clock from "./components/Clock.jsx";
 import Every from "./components/Every.jsx";
 import Users from "./components/Users.jsx";
 import Weather from "./components/Weather.jsx";
+import Navbar from "./components/Navbar.jsx";
+import Navbar from "./components/Navbar.jsx";
 
+import HomePage from "./pages/HomePage";
+import TermPage from "./pages/TermPage";
 import "./App.css";
 
 const App = () => {
@@ -36,69 +41,85 @@ const App = () => {
   const list = ["react", "props", "map"];
 
   return (
-    <>
-      {/*2. 상태값과, 그 상태를 반대로 바꾸는 함수를 Props 로 전달 */}
-      <Avatar
-        name="지니"
-        online={isJiniOnline}
-        onToggle={() => setIsjiniOnline(!isJiniOnline)}
-      />
-      <Avatar
-        name="철수"
-        online={isChulsooOnline}
-        onToggle={() => setIsChulsooOnline(!isChulsooOnline)}
-      />
-      <br></br>
-      <br></br>
-      <Badge
-        text={text}
-        type={currentType}
-        onToggle={(clickedType) => setCurrentType(clickedType)}
-      />
-      <br></br>
-      <br></br>
-      <Alert
-        type={alertType}
-        text={currentText}
-        onToggle={(clickedType) => setAlertType(clickedType)}
-      />
-      <br></br>
-      <br></br>
-      <Rating score={3} />
-      <br></br>
-      <br></br>
-      <Tag tags={list} />
-      <br></br>
-      <br></br>
-      <SubmitButton />
-      <br></br>
-      <br></br>
-      <Counter />
-      <br></br>
-      <br></br>
-      <Counter2 />
-      <br></br>
-      <br></br>
-      <NameForm />
-      <br></br>
-      <br></br>
-      <ProductItem name="팔찌" />
-      <br></br>
-      <br></br>
-      <Hello />
-      <br></br>
-      <br></br>
-      <Clock />
-      <br></br>
-      <br></br>
-      <Every />
-      <br></br>
-      <br></br>
-      <Users />
-      <br></br>
-      <br></br>
-      <Weather />
-    </>
+    <div className="app">
+      {/*2. 상단 네비게이션 바 */}
+      <Navbar />
+
+      {/* URL 주소에 따라 변경되는 라우터 영역 */}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <HomePage>
+              {/*2. 상태값과, 그 상태를 반대로 바꾸는 함수를 Props 로 전달 */}
+              <Avatar
+                name="지니"
+                online={isJiniOnline}
+                onToggle={() => setIsjiniOnline(!isJiniOnline)}
+              />
+              <Avatar
+                name="철수"
+                online={isChulsooOnline}
+                onToggle={() => setIsChulsooOnline(!isChulsooOnline)}
+              />
+              <br></br>
+              <br></br>
+              <Badge
+                text={text}
+                type={currentType}
+                onToggle={(clickedType) => setCurrentType(clickedType)}
+              />
+              <br></br>
+              <br></br>
+              <Alert
+                type={alertType}
+                text={currentText}
+                onToggle={(clickedType) => setAlertType(clickedType)}
+              />
+              <br></br>
+              <br></br>
+              <Rating score={3} />
+              <br></br>
+              <br></br>
+              <Tag tags={list} />
+              <br></br>
+              <br></br>
+              <SubmitButton />
+              <br></br>
+              <br></br>
+              <Counter />
+              <br></br>
+              <br></br>
+              <Counter2 />
+              <br></br>
+              <br></br>
+              <NameForm />
+              <br></br>
+              <br></br>
+              <ProductItem name="팔찌" />
+              <br></br>
+              <br></br>
+              <Hello />
+              <br></br>
+              <br></br>
+              <Clock />
+              <br></br>
+              <br></br>
+              <Every />
+              <br></br>
+              <br></br>
+              <Users />
+              <br></br>
+              <br></br>
+              <Weather />
+            </HomePage>
+          }
+        ></Route>
+
+        {/* 상세 페이지 */}
+        <Route path="/term/:id" element={<TermPage />} />
+      </Routes>
+    </div>
   );
 };
 

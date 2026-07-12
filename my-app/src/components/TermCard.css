@@ -1,0 +1,30 @@
+/* 카드 전체가 Link(<a>)라서 block + 밑줄 제거가 시작점 */
+.term-card {
+  display: block;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-decoration: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+
+.term-card:hover {
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow);
+  transform: translateY(-2px); /* 살짝 떠오르는 효과 */
+}
+
+.term-card-name {
+  margin: 0 0 8px;
+  font-size: 20px;
+  color: var(--text-h);
+}
+
+.term-card-short {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text);
+}

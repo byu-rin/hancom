@@ -1,0 +1,17 @@
+.home {
+  padding: 32px 24px 64px;
+  text-align: left; /* index.css의 #root가 가운데 정렬이라 되돌림 */
+}
+
+.home h1 {
+  font-size: 32px;
+  letter-spacing: -0.5px;
+  margin: 0 0 24px;
+}
+
+/* 카드 격자: 화면 너비에 맞춰 열 개수가 저절로 변함 */
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
