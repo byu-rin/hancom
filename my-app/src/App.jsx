@@ -16,8 +16,6 @@ import Every from "./components/Every.jsx";
 import Users from "./components/Users.jsx";
 import Weather from "./components/Weather.jsx";
 import Navbar from "./components/Navbar.jsx";
-import Navbar from "./components/Navbar.jsx";
-
 import HomePage from "./pages/HomePage";
 import TermPage from "./pages/TermPage";
 import "./App.css";
