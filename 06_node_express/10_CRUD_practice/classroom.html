@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>자리 배치도</title>
+
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+      body {
+        font-family: sans-serif;
+        background: #f5f5f5;
+        padding: 40px;
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      #controls {
+        text-align: center;
+        margin: 30px 0;
+      }
+
+      button {
+        padding: 10px 18px;
+        margin: 5px;
+        cursor: pointer;
+      }
+
+      #students {
+        width: 900px;
+        margin: auto;
+
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+
+        gap: 20px;
+      }
+
+      .student {
+        background: white;
+        border-radius: 10px;
+        padding: 30px 10px;
+
+        text-align: center;
+
+        cursor: pointer;
+
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+        transition: 0.2s;
+      }
+
+      .student:hover {
+        transform: translateY(-4px);
+      }
+
+      .id {
+        color: gray;
+        font-size: 13px;
+      }
+
+      .name {
+        margin-top: 10px;
+        font-size: 20px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>자리 배치도</h1>
+
+    <div id="controls">
+      <button id="loadBtn">학생 조회</button>
+      <button id="addBtn">학생 추가</button>
+      
+      <p class="guide">🖱️ 삭제는 우클릭!</class=>
+    </div>
+    <div id="students"></div>
+    <script src="classroom.js"></script>
+  </body>
+</html>
