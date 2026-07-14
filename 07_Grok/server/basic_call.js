@@ -1,5 +1,4 @@
 require("dotenv").config();
-// .env의 키를 process.env로 불러옴
 const key = process.env.GROQ_API_KEY;
 
 // top-level await 없이 async 함수로 감싸 실행 (require와 함께 쓰기 위함)

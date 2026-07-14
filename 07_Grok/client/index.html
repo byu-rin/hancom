@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Groq 챗봇</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="chat-app">
+      <!-- 상단 헤더 -->
+      <header>
+        <h1>🤖 Groq 챗봇</h1>
+      </header>
+
+      <!-- 대화 내용이 쌓이는 영역 (스크롤됨) -->
+      <main id="messages" aria-live="polite"></main>
+
+      <!-- 입력창: form이라서 Enter 키로도 바로 전송됨 -->
+      <form id="chat-form">
+        <input
+          id="q"
+          type="text"
+          placeholder="무엇이든 물어보세요"
+          autocomplete="off"
+        />
+        <button id="btn" type="submit">보내기</button>
+      </form>
+    </div>
+
+    <!-- 동작(JS)은 app.js 로 분리해 불러오기 -->
+    <script src="app.js"></script>
+  </body>
+</html>
