@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Calculator — Pinterest Style</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    /* Surface */
+    --canvas:            #ffffff;
+    --surface-soft:      #fbfbf9;
+    --surface-card:      #f6f6f3;
+    --secondary-bg:      #e5e5e0;
+    --secondary-pressed: #c8c8c1;
+    /* Accent — Pinterest Red (등호 키 전용) */
+    --primary:           #e60023;
+    --primary-pressed:   #cc001f;
+    /* Text */
+    --ink:               #000000;
+    --body:              #33332e;
+    --mute:              #62625b;
+    --ash:               #91918c;
+    /* Lines & focus */
+    --hairline:          #dadad3;
+    --focus-outer:       #435ee5;
+    /* Radius (3종만: 16 / 32 / pill) */
+    --r-md:   16px;
+    --r-lg:   32px;
+    --r-full: 9999px;
+    /* Spacing (8px base) */
+    --sp-sm: 8px;
+    --sp-lg: 16px;
+    --sp-xl: 24px;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html,body{ height:100%; }
+
+  body{
+    min-height:100%;
+    font-family:"Inter", -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color:var(--body);
+    background:var(--surface-soft);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:var(--sp-xl);
+    padding:64px 24px;
+  }
+
+  /* ---- Calculator card (feature-card 파생: 플랫, 그림자 없음) ---------- */
+  .calculator{
+    width:100%;
+    max-width:360px;
+    background:var(--surface-card);
+    border-radius:var(--r-lg);      /* 32px — 큰 카드 */
+    padding:var(--sp-xl);
+    display:flex;
+    flex-direction:column;
+    gap:var(--sp-lg);
+    /* 시스템 정책: 카드에 drop shadow 없음 (플랫) */
+  }
+
+  .calculator__title{
+    font-size:22px;                 /* heading-lg */
+    font-weight:600;
+    color:var(--ink);
+    letter-spacing:0;
+  }
+
+  /* ---- Display (canvas 서페이스, 16px 반경) --------------------------- */
+  .display{
+    background:var(--canvas);
+    border-radius:var(--r-md);      /* 16px */
+    padding:var(--sp-lg);
+    min-height:96px;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    justify-content:center;
+    gap:4px;
+    overflow:hidden;
+  }
+
+  .display__expr{
+    font-size:14px;                 /* body-sm */
+    font-weight:400;
+    color:var(--mute);
+    min-height:20px;
+    max-width:100%;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    direction:rtl;
+  }
+
+  .display__value{
+    font-size:44px;                 /* display-lg */
+    font-weight:600;
+    line-height:1.15;
+    letter-spacing:-0.8px;          /* display 음수 트래킹 */
+    color:var(--ink);
+    max-width:100%;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    direction:ltr;
+  }
+  .display__value.is-error{
+    color:var(--primary);
+    font-size:32px;
+  }
+
+  /* ---- Keypad (4열 grid, 8px gutter) --------------------------------- */
+  .keypad{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:var(--sp-sm);               /* 8px — spacing.sm */
+  }
+
+  .key{
+    font-family:inherit;
+    font-size:20px;
+    font-weight:600;
+    height:64px;                    /* 넉넉한 터치 타깃 (>=44px) */
+    border:none;
+    border-radius:var(--r-full);    /* pill/원형 */
+    cursor:pointer;
+    color:var(--ink);
+    background:var(--secondary-bg);
+    transition:background .06s ease;
+    -webkit-user-select:none;
+    user-select:none;
+  }
+  .key:active{ background:var(--secondary-pressed); }
+
+  .key:focus-visible{
+    outline:2px solid var(--focus-outer);
+    outline-offset:2px;
+  }
+
+  /* 유틸 키 (AC · ± · %) — 밝은 크림 톤 + mute 텍스트 */
+  .key--util{
+    background:var(--surface-card);
+    color:var(--mute);
+    font-weight:700;
+  }
+  .key--util:active{ background:var(--secondary-bg); }
+
+  /* 연산자 키 (÷ × − +) — ink 유지, weight 700로 구분, red 금지 */
+  .key--op{
+    background:var(--secondary-bg);
+    color:var(--ink);
+    font-weight:700;
+    font-size:24px;
+  }
+  .key--op.is-active{
+    background:var(--ink);
+    color:var(--canvas);
+  }
+
+  /* = 등호 키 — 시스템 유일의 Pinterest Red */
+  .key--equals{
+    background:var(--primary);
+    color:var(--canvas);
+    font-weight:700;
+    font-size:24px;
+  }
+  .key--equals:active{ background:var(--primary-pressed); }
+
+  .key--zero{ grid-column:span 2; }
+
+  /* ---- Footer note --------------------------------------------------- */
+  .note{
+    font-size:12px;                 /* caption-sm */
+    color:var(--mute);
+    text-align:center;
+  }
+
+  /* ---- Responsive (mobile <=480px) ----------------------------------- */
+  @media (max-width:480px){
+    body{ padding:32px 16px; }
+    .display__value{ font-size:36px; }   /* 44 → 36 스케일 */
+    .key{ height:56px; font-size:18px; }
+  }
+</style>
+</head>
+<body>
+
+  <main class="calculator" role="application" aria-label="계산기">
+    <h1 class="calculator__title">Calculator</h1>
+
+    <div class="display">
+      <div class="display__expr" id="expr" aria-hidden="true"></div>
+      <div class="display__value" id="value" aria-live="polite">0</div>
+    </div>
+
+    <div class="keypad" id="keypad">
+      <button class="key key--util" data-action="clear">AC</button>
+      <button class="key key--util" data-action="sign">±</button>
+      <button class="key key--util" data-action="percent">%</button>
+      <button class="key key--op"   data-op="/">÷</button>
+
+      <button class="key" data-digit="7">7</button>
+      <button class="key" data-digit="8">8</button>
+      <button class="key" data-digit="9">9</button>
+      <button class="key key--op" data-op="*">×</button>
+
+      <button class="key" data-digit="4">4</button>
+      <button class="key" data-digit="5">5</button>
+      <button class="key" data-digit="6">6</button>
+      <button class="key key--op" data-op="-">−</button>
+
+      <button class="key" data-digit="1">1</button>
+      <button class="key" data-digit="2">2</button>
+      <button class="key" data-digit="3">3</button>
+      <button class="key key--op" data-op="+">+</button>
+
+      <button class="key key--zero" data-digit="0">0</button>
+      <button class="key" data-digit=".">.</button>
+      <button class="key key--equals" data-action="equals">=</button>
+    </div>
+  </main>
+
+  <p class="note">숫자·연산자 키보드 입력 지원 · Enter = 계산 · Esc = 초기화</p>
+
+<script>
+  // ---- State ----------------------------------------------------------
+  let current  = "0";     // 현재 입력 중인 값(문자열)
+  let previous = null;    // 이전 피연산자
+  let operator = null;    // 선택된 연산자 (+ - * /)
+  let resetNext = false;  // true면 다음 숫자 입력 시 current를 새로 시작
+  let hasError = false;
+
+  const valueEl = document.getElementById("value");
+  const exprEl  = document.getElementById("expr");
+  const keypad  = document.getElementById("keypad");
+
+  const OP_SYMBOL = { "+":"+", "-":"−", "*":"×", "/":"÷" };
+
+  // ---- Display --------------------------------------------------------
+  function formatNumber(str){
+    if(str === "Error") return str;
+    if(str === "" || str === "-") return str || "0";
+    // 소수점 입력 중(끝이 .)이면 그대로 보여줌
+    const endsWithDot = str.endsWith(".");
+    const num = Number(str);
+    if(!isFinite(num)) return "Error";
+    // 정수부는 천단위 구분, 소수부는 유지
+    let [intPart, decPart] = str.split(".");
+    const neg = intPart.startsWith("-");
+    if(neg) intPart = intPart.slice(1);
+    intPart = intPart.replace(/^0+(?=\d)/, "");             // 선행 0 제거
+    const grouped = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    let out = (neg ? "-" : "") + grouped;
+    if(decPart !== undefined) out += "." + decPart;
+    else if(endsWithDot) out += ".";
+    return out;
+  }
+
+  function updateDisplay(){
+    valueEl.textContent = hasError ? "Error" : formatNumber(current);
+    valueEl.classList.toggle("is-error", hasError);
+    if(hasError){ exprEl.textContent = ""; return; }
+    if(previous !== null && operator){
+      exprEl.textContent = formatNumber(previous) + " " + OP_SYMBOL[operator];
+    } else {
+      exprEl.textContent = "";
+    }
+  }
+
+  // ---- Input ----------------------------------------------------------
+  function inputDigit(d){
+    if(hasError) clearAll();
+    if(d === "."){
+      if(resetNext){ current = "0."; resetNext = false; return updateDisplay(); }
+      if(!current.includes(".")) current += ".";
+      return updateDisplay();
+    }
+    if(resetNext || current === "0"){
+      current = d;
+      resetNext = false;
+    } else {
+      if(current.replace(/[-.]/g,"").length >= 12) return; // 자릿수 제한
+      current += d;
+    }
+    updateDisplay();
+  }
+
+  function chooseOperator(op){
+    if(hasError) return;
+    // 이미 대기 중인 연산이 있으면 먼저 계산 (연쇄 계산)
+    if(previous !== null && operator && !resetNext){
+      compute();
+      if(hasError) return;
+    }
+    previous = current;
+    operator = op;
+    resetNext = true;
+    highlightOperator(op);
+    updateDisplay();
+  }
+
+  function compute(){
+    if(previous === null || operator === null) return;
+    const a = Number(previous);
+    const b = Number(current);
+    let result;
+    switch(operator){
+      case "+": result = a + b; break;
+      case "-": result = a - b; break;
+      case "*": result = a * b; break;
+      case "/":
+        if(b === 0){ setError(); return; }
+        result = a / b;
+        break;
+    }
+    // 부동소수점 정리
+    result = Math.round((result + Number.EPSILON) * 1e10) / 1e10;
+    current  = String(result);
+    previous = null;
+    operator = null;
+    resetNext = true;
+    highlightOperator(null);
+    updateDisplay();
+  }
+
+  function percent(){
+    if(hasError) return;
+    current = String(Number(current) / 100);
+    updateDisplay();
+  }
+
+  function toggleSign(){
+    if(hasError || current === "0") return;
+    current = current.startsWith("-") ? current.slice(1) : "-" + current;
+    updateDisplay();
+  }
+
+  function clearAll(){
+    current = "0"; previous = null; operator = null;
+    resetNext = false; hasError = false;
+    highlightOperator(null);
+    updateDisplay();
+  }
+
+  function backspace(){
+    if(hasError) return clearAll();
+    if(resetNext) return;
+    if(current.length <= 1 || (current.length === 2 && current.startsWith("-"))){
+      current = "0";
+    } else {
+      current = current.slice(0, -1);
+    }
+    updateDisplay();
+  }
+
+  function setError(){
+    hasError = true;
+    previous = null; operator = null; resetNext = true;
+    highlightOperator(null);
+    updateDisplay();
+  }
+
+  function highlightOperator(op){
+    keypad.querySelectorAll(".key--op").forEach(btn => {
+      btn.classList.toggle("is-active", btn.dataset.op === op);
+    });
+  }
+
+  // ---- Events (click) -------------------------------------------------
+  keypad.addEventListener("click", (e) => {
+    const btn = e.target.closest("button.key");
+    if(!btn) return;
+    if(btn.dataset.digit !== undefined) return inputDigit(btn.dataset.digit);
+    if(btn.dataset.op    !== undefined) return chooseOperator(btn.dataset.op);
+    switch(btn.dataset.action){
+      case "equals":  compute(); break;
+      case "clear":   clearAll(); break;
+      case "sign":    toggleSign(); break;
+      case "percent": percent(); break;
+    }
+  });
+
+  // ---- Events (physical keyboard) ------------------------------------
+  window.addEventListener("keydown", (e) => {
+    const k = e.key;
+    if(/^[0-9]$/.test(k)) return inputDigit(k);
+    if(k === ".")         return inputDigit(".");
+    if(["+","-","*","/"].includes(k)) return chooseOperator(k);
+    if(k === "Enter" || k === "="){ e.preventDefault(); return compute(); }
+    if(k === "Backspace") return backspace();
+    if(k === "Escape")    return clearAll();
+    if(k === "%")         return percent();
+  });
+
+  updateDisplay();
+</script>
+</body>
+</html>

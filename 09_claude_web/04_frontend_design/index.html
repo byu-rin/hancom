@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TABULATOR — 종이 테이프 계산기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --desk:      #23201C;   /* warm near-black desk */
+    --desk-glow: #2f2b24;   /* soft desk vignette */
+    --body:      #3E6F63;   /* teal enamel machine */
+    --body-lo:   #2f574d;   /* bevel shadow */
+    --body-hi:   #57897b;   /* bevel highlight */
+    --paper:     #F1EAD9;   /* bone tape */
+    --paper-lo:  #e4dbc6;
+    --ink:       #241F1A;   /* black ribbon */
+    --red:       #C23A2A;   /* red ribbon: totals & negatives */
+    --brass:     #D2A24A;   /* accent: = key, power lamp */
+    --brass-lo:  #b0812f;
+    --key:       #2A2E2C;   /* graphite digit key */
+    --key-hi:    #3a403c;
+    --key-fn:    #37514a;   /* operator key (tinted) */
+    --key-text:  #EDE7D6;
+    --slot:      #171512;   /* paper slot */
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html,body{ height:100%; }
+
+  body{
+    min-height:100%;
+    font-family:"Space Mono", ui-monospace, monospace;
+    color:var(--key-text);
+    background:
+      radial-gradient(120% 90% at 50% 8%, var(--desk-glow) 0%, var(--desk) 55%, #191712 100%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+    padding:32px 18px 40px;
+  }
+
+  /* ---- Machine shell ---------------------------------------------------- */
+  .machine{
+    width:100%;
+    max-width:390px;
+    background:linear-gradient(180deg, var(--body-hi) 0%, var(--body) 14%, var(--body) 86%, var(--body-lo) 100%);
+    border-radius:22px;
+    padding:18px 18px 22px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.18) inset,
+      0 -2px 0 rgba(0,0,0,.28) inset,
+      0 26px 50px -18px rgba(0,0,0,.7),
+      0 4px 0 var(--body-lo);
+  }
+
+  .brandbar{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    padding:2px 4px 14px;
+    color:#eef3ef;
+  }
+  .brand{
+    font-family:"Bricolage Grotesque", sans-serif;
+    font-weight:800;
+    font-size:19px;
+    letter-spacing:.14em;
+    text-shadow:0 1px 0 rgba(0,0,0,.3);
+  }
+  .model{
+    font-family:"Bricolage Grotesque", sans-serif;
+    font-weight:500;
+    font-size:11px;
+    letter-spacing:.16em;
+    opacity:.8;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .lamp{
+    width:9px; height:9px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #ffd98a, var(--brass) 55%, var(--brass-lo));
+    box-shadow:0 0 8px 1px rgba(210,162,74,.8), 0 0 0 1px rgba(0,0,0,.25);
+  }
+
+  /* ---- Paper slot + tape ------------------------------------------------ */
+  .slot{
+    height:9px;
+    border-radius:6px 6px 2px 2px;
+    background:linear-gradient(180deg, var(--slot), #000);
+    box-shadow:0 2px 5px rgba(0,0,0,.55) inset, 0 1px 0 rgba(255,255,255,.08);
+    margin:0 6px;
+    position:relative;
+    z-index:2;
+  }
+
+  .paper{
+    position:relative;
+    margin:0 6px 16px;
+    padding:14px 16px 0;
+    background:
+      repeating-linear-gradient(180deg, transparent 0 27px, rgba(90,70,45,.09) 27px 28px),
+      radial-gradient(140% 60% at 50% 0%, rgba(0,0,0,.10), transparent 40%),
+      linear-gradient(180deg, var(--paper), var(--paper-lo));
+    border-radius:2px 2px 4px 4px;
+    box-shadow:0 12px 22px -12px rgba(0,0,0,.5), 0 1px 0 rgba(255,255,255,.4) inset;
+    color:var(--ink);
+  }
+
+  .tape{
+    height:170px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    gap:2px;
+    scrollbar-width:thin;
+    scrollbar-color:rgba(90,70,45,.35) transparent;
+  }
+  .tape::-webkit-scrollbar{ width:5px; }
+  .tape::-webkit-scrollbar-thumb{ background:rgba(90,70,45,.3); border-radius:3px; }
+
+  .tape-empty{
+    font-size:12px;
+    letter-spacing:.04em;
+    color:rgba(36,31,26,.42);
+    text-align:center;
+    padding-bottom:8px;
+  }
+
+  .line{
+    display:grid;
+    grid-template-columns:1fr 1.6em;
+    align-items:baseline;
+    font-size:15px;
+    line-height:1.5;
+    letter-spacing:.02em;
+  }
+  .line .num{ text-align:right; font-variant-numeric:tabular-nums; }
+  .line .op{ text-align:center; opacity:.85; }
+  .line.result{ color:var(--red); font-weight:700; }
+  .line.result .num{
+    border-top:1.5px solid var(--red);
+    padding-top:1px;
+    margin-top:2px;
+  }
+  .line.negative{ color:var(--red); }
+
+  .stamp{ animation:stamp .16s ease-out; }
+  @keyframes stamp{
+    from{ opacity:0; transform:translateY(-3px); filter:blur(1.2px); }
+    to  { opacity:1; transform:none; filter:none; }
+  }
+
+  /* register: the live value window on the paper */
+  .register{
+    border-top:2px dashed rgba(90,70,45,.35);
+    margin-top:6px;
+    padding:8px 0 12px;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .register .tag{
+    font-family:"Bricolage Grotesque", sans-serif;
+    font-weight:700;
+    font-size:10px;
+    letter-spacing:.22em;
+    color:rgba(36,31,26,.5);
+    text-transform:uppercase;
+  }
+  .register .val{
+    font-size:30px;
+    font-weight:700;
+    letter-spacing:.01em;
+    font-variant-numeric:tabular-nums;
+    color:var(--ink);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .register.err .val{ color:var(--red); font-size:22px; }
+
+  /* tear-off tab on the paper */
+  .tear{
+    position:absolute;
+    top:8px; right:12px;
+    font-family:"Bricolage Grotesque", sans-serif;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.12em;
+    color:rgba(36,31,26,.5);
+    background:transparent;
+    border:1px solid rgba(90,70,45,.3);
+    border-radius:4px;
+    padding:3px 7px;
+    cursor:pointer;
+  }
+  .tear:hover{ color:var(--red); border-color:var(--red); }
+  .tear:focus-visible{ outline:2px solid var(--brass); outline-offset:2px; }
+
+  /* ---- Keypad ----------------------------------------------------------- */
+  .keys{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:9px;
+    margin:0 4px;
+  }
+  .key{
+    appearance:none;
+    border:none;
+    font-family:"Space Mono", monospace;
+    font-size:20px;
+    font-weight:700;
+    color:var(--key-text);
+    background:linear-gradient(180deg, var(--key-hi), var(--key));
+    border-radius:12px;
+    padding:16px 0;
+    cursor:pointer;
+    box-shadow:0 3px 0 #14100e, 0 5px 8px -3px rgba(0,0,0,.5), 0 1px 0 rgba(255,255,255,.09) inset;
+    transition:transform .04s ease, box-shadow .04s ease, filter .1s ease;
+    user-select:none;
+  }
+  .key:hover{ filter:brightness(1.08); }
+  .key:active, .key.press{
+    transform:translateY(3px);
+    box-shadow:0 0 0 #14100e, 0 2px 4px -2px rgba(0,0,0,.5), 0 1px 0 rgba(255,255,255,.08) inset;
+  }
+  .key:focus-visible{ outline:2px solid var(--brass); outline-offset:3px; }
+
+  .key.fn{
+    background:linear-gradient(180deg, #416055, var(--key-fn));
+    color:#eafff6;
+    box-shadow:0 3px 0 #1e332d, 0 5px 8px -3px rgba(0,0,0,.5), 0 1px 0 rgba(255,255,255,.12) inset;
+  }
+  .key.util{ font-size:16px; color:#d7e4de; }
+  .key.wide{ grid-column:span 2; }
+  .key.equals{
+    background:linear-gradient(180deg, #e6be6a, var(--brass));
+    color:#2a2008;
+    box-shadow:0 3px 0 var(--brass-lo), 0 5px 10px -3px rgba(0,0,0,.5), 0 1px 0 rgba(255,255,255,.35) inset;
+  }
+
+  .hint{
+    font-family:"Bricolage Grotesque", sans-serif;
+    font-size:11px;
+    letter-spacing:.06em;
+    color:rgba(237,231,214,.42);
+    text-align:center;
+  }
+  .hint kbd{
+    font-family:"Space Mono", monospace;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:4px;
+    padding:1px 5px;
+    font-size:10px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .stamp{ animation:none; }
+    .key{ transition:none; }
+  }
+
+  @media (max-width:400px){
+    .register .val{ font-size:26px; }
+    .key{ font-size:18px; padding:15px 0; }
+  }
+</style>
+</head>
+<body>
+  <main class="machine" aria-label="종이 테이프 계산기">
+    <div class="brandbar">
+      <span class="brand">TABULATOR</span>
+      <span class="model">mod. 7 · 電子 <span class="lamp" aria-hidden="true"></span></span>
+    </div>
+
+    <div class="slot" aria-hidden="true"></div>
+
+    <section class="paper">
+      <button class="tear" id="tear" title="테이프를 뜯어 기록을 지웁니다">기록 뜯기</button>
+
+      <div class="tape" id="tape" role="log" aria-label="계산 기록">
+        <div class="tape-empty" id="tapeEmpty">— 아직 인쇄된 기록이 없습니다 —</div>
+      </div>
+
+      <div class="register" id="register">
+        <span class="tag">합계</span>
+        <span class="val" id="value" aria-live="polite">0</span>
+      </div>
+    </section>
+
+    <div class="keys" id="keys">
+      <button class="key util" data-action="clear">C</button>
+      <button class="key util" data-action="negate" aria-label="부호 바꾸기">±</button>
+      <button class="key util" data-action="percent" aria-label="퍼센트">%</button>
+      <button class="key fn" data-op="÷" aria-label="나누기">÷</button>
+
+      <button class="key" data-digit="7">7</button>
+      <button class="key" data-digit="8">8</button>
+      <button class="key" data-digit="9">9</button>
+      <button class="key fn" data-op="×" aria-label="곱하기">×</button>
+
+      <button class="key" data-digit="4">4</button>
+      <button class="key" data-digit="5">5</button>
+      <button class="key" data-digit="6">6</button>
+      <button class="key fn" data-op="−" aria-label="빼기">−</button>
+
+      <button class="key" data-digit="1">1</button>
+      <button class="key" data-digit="2">2</button>
+      <button class="key" data-digit="3">3</button>
+      <button class="key fn" data-op="+" aria-label="더하기">+</button>
+
+      <button class="key wide" data-digit="0">0</button>
+      <button class="key" data-action="decimal" aria-label="소수점">.</button>
+      <button class="key equals" data-action="equals" aria-label="계산">=</button>
+    </div>
+  </main>
+
+  <p class="hint">키보드로도 입력됩니다 · <kbd>0–9</kbd> <kbd>+ − * /</kbd> <kbd>Enter</kbd> <kbd>Esc</kbd> <kbd>⌫</kbd></p>
+
+<script>
+(() => {
+  "use strict";
+
+  // ---- 상태(state) : 계산기의 현재 값들 ---------------------------------
+  let entry   = "0";     // 지금 입력 중인 숫자 (문자열로 다뤄 소수점/앞자리 처리)
+  let stored  = null;    // 누적된 결과값 (숫자)
+  let op      = null;    // 대기 중인 연산자 글리프: + − × ÷
+  let awaiting = false;  // 연산자/= 직후 상태 → 다음 숫자는 새로 시작
+  let error   = false;
+
+  const tapeEl  = document.getElementById("tape");
+  const emptyEl = document.getElementById("tapeEmpty");
+  const valEl   = document.getElementById("value");
+  const regEl   = document.getElementById("register");
+
+  // ---- 숫자 서식 --------------------------------------------------------
+  // 정수부에 천단위 콤마를 넣되, 입력 중인 소수점/소수자리는 그대로 보존
+  function group(str){
+    const neg = str.startsWith("-");
+    if (neg) str = str.slice(1);
+    let [int, frac] = str.split(".");
+    int = int.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    let out = frac !== undefined ? int + "." + frac : int;
+    return (neg ? "-" : "") + out;
+  }
+
+  // 계산 결과(숫자)를 문자열로. 부동소수점 오차를 10자리에서 정리
+  function numToStr(n){
+    const r = Math.round((n + Number.EPSILON) * 1e10) / 1e10;
+    return String(r);
+  }
+
+  function compute(a, o, b){
+    switch (o){
+      case "+": return a + b;
+      case "−": return a - b;
+      case "×": return a * b;
+      case "÷": return b === 0 ? NaN : a / b;
+    }
+    return b;
+  }
+
+  // ---- 화면(레지스터) 갱신 ---------------------------------------------
+  function updateRegister(){
+    regEl.classList.toggle("err", error);
+    if (error){ valEl.textContent = "오류 · ÷0"; return; }
+    // 연산자 대기 중이면 누적값을, 아니면 입력 중인 숫자를 보여준다
+    valEl.textContent = awaiting && stored !== null
+      ? group(numToStr(stored))
+      : group(entry);
+  }
+
+  // ---- 테이프에 인쇄 ----------------------------------------------------
+  function printLine(numStr, glyph, kind){
+    if (emptyEl) { emptyEl.remove(); }
+    const line = document.createElement("div");
+    line.className = "line stamp" + (kind ? " " + kind : "");
+    const isNeg = parseFloat(numStr) < 0;
+    line.innerHTML =
+      '<span class="num">' + group(numToStr(parseFloat(numStr))) + '</span>' +
+      '<span class="op">' + (glyph || "") + '</span>';
+    if (isNeg && kind !== "result") line.classList.add("negative");
+    tapeEl.appendChild(line);
+    tapeEl.scrollTop = tapeEl.scrollHeight;
+  }
+
+  function printResult(n){
+    printLine(numToStr(n), "＊", "result");   // ＊ = 합계 표시(구식 계산기 관습)
+  }
+
+  function errorState(){
+    error = true;
+    op = null; awaiting = true;
+    printLine("0", "E", "result");
+    updateRegister();
+  }
+
+  // ---- 키 동작 ----------------------------------------------------------
+  function reset(){ entry = "0"; stored = null; op = null; awaiting = false; error = false; }
+
+  function inputDigit(d){
+    if (error) reset();
+    if (awaiting){ entry = d; awaiting = false; }
+    else if (entry === "0"){ entry = d; }
+    else { entry += d; }
+    updateRegister();
+  }
+
+  function inputDecimal(){
+    if (error) reset();
+    if (awaiting){ entry = "0."; awaiting = false; }
+    else if (!entry.includes(".")){ entry += "."; }
+    updateRegister();
+  }
+
+  function setOp(glyph){
+    if (error) return;
+    const val = parseFloat(entry);
+    if (op !== null && awaiting){
+      // 숫자 입력 없이 연산자만 바꾸는 경우 → 연산자만 교체
+      op = glyph;
+      return;
+    }
+    if (op === null){
+      stored = val;
+    } else {
+      const r = compute(stored, op, val);
+      if (!isFinite(r)) return errorState();
+      stored = r;
+    }
+    printLine(entry, glyph);   // 방금 확정한 숫자 + 누른 연산자를 인쇄 (10키 계산기 방식)
+    op = glyph;
+    awaiting = true;
+    updateRegister();
+  }
+
+  function equals(){
+    if (error) return;
+    const val = parseFloat(entry);
+    if (op === null){
+      printResult(val); stored = val; awaiting = true;
+      updateRegister(); return;
+    }
+    const r = compute(stored, op, val);
+    if (!isFinite(r)) return errorState();
+    printLine(entry, op);
+    printResult(r);
+    stored = r; entry = numToStr(r); op = null; awaiting = true;
+    updateRegister();
+  }
+
+  function negate(){
+    if (error) reset();
+    if (entry !== "0") entry = entry.startsWith("-") ? entry.slice(1) : "-" + entry;
+    awaiting = false;
+    updateRegister();
+  }
+
+  function percent(){
+    if (error) reset();
+    entry = numToStr(parseFloat(entry) / 100);
+    awaiting = false;
+    updateRegister();
+  }
+
+  function backspace(){
+    if (error){ reset(); updateRegister(); return; }
+    if (awaiting) return;
+    entry = entry.length > 1 ? entry.slice(0, -1) : "0";
+    if (entry === "-") entry = "0";
+    updateRegister();
+  }
+
+  function tearOff(){
+    tapeEl.innerHTML = '<div class="tape-empty" id="tapeEmpty">— 아직 인쇄된 기록이 없습니다 —</div>';
+    reset();
+    updateRegister();
+  }
+
+  // ---- 이벤트 연결 ------------------------------------------------------
+  document.getElementById("keys").addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    if (b.dataset.digit)  inputDigit(b.dataset.digit);
+    else if (b.dataset.op) setOp(b.dataset.op);
+    else switch (b.dataset.action){
+      case "decimal": inputDecimal(); break;
+      case "equals":  equals();       break;
+      case "clear":   reset(); updateRegister(); break;
+      case "negate":  negate();       break;
+      case "percent": percent();      break;
+    }
+  });
+
+  document.getElementById("tear").addEventListener("click", tearOff);
+
+  // 키보드 입력 + 해당 버튼을 잠깐 눌린 것처럼 표시
+  const OPS = { "+":"+", "-":"−", "*":"×", "/":"÷" };
+  function flash(sel){
+    const el = document.querySelector(sel);
+    if (!el) return;
+    el.classList.add("press");
+    setTimeout(() => el.classList.remove("press"), 90);
+  }
+
+  window.addEventListener("keydown", (e) => {
+    const k = e.key;
+    if (/^[0-9]$/.test(k)){ inputDigit(k); flash(`[data-digit="${k}"]`); }
+    else if (k === "."){ inputDecimal(); flash('[data-action="decimal"]'); }
+    else if (k in OPS){ setOp(OPS[k]); flash(`[data-op="${OPS[k]}"]`); e.preventDefault(); }
+    else if (k === "Enter" || k === "="){ equals(); flash('[data-action="equals"]'); e.preventDefault(); }
+    else if (k === "Backspace"){ backspace(); e.preventDefault(); }
+    else if (k === "Escape"){ reset(); updateRegister(); flash('[data-action="clear"]'); }
+    else if (k === "%"){ percent(); flash('[data-action="percent"]'); }
+  });
+
+  updateRegister();
+})();
+</script>
+</body>
+</html>

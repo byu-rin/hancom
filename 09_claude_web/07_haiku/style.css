@@ -1,0 +1,205 @@
+/* SEED Design token-based styles */
+:root {
+  /* Colors */
+  --bg-default:        oklch(1.000 0.000 0);
+  --bg-layer:          oklch(0.979 0.002 248);
+  --bg-brand-solid:    oklch(0.696 0.204 43);
+  --bg-brand-pressed:  oklch(0.618 0.195 40);
+  --fg-neutral:        oklch(0.226 0.008 264);
+  --fg-muted:          oklch(0.636 0.015 262);
+  --fg-on-brand:       oklch(1.000 0.000 0);
+  --stroke-muted:      oklch(0.901 0.007 269);
+  --gray-900:          oklch(0.307 0.017 256);
+  --gray-800:          oklch(0.477 0.028 264);
+  --gray-500:          oklch(0.867 0.007 269);
+  --gray-400:          oklch(0.901 0.007 269);
+
+  /* Ball brand colors */
+  --ball-carrot:  oklch(0.696 0.204 43);
+  --ball-blue:    oklch(0.606 0.205 258);
+  --ball-green:   oklch(0.585 0.115 170);
+  --ball-red:     oklch(0.640 0.233 28);
+  --ball-yellow:  oklch(0.898 0.141 95);
+
+  /* Typography */
+  --font-family: "Pretendard", "Pretendard Variable", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Spacing */
+  --x2: 8px;
+  --x3: 12px;
+  --x4: 16px;
+  --x5: 20px;
+  --x6: 24px;
+
+  /* Radius */
+  --r2: 8px;
+  --r4: 16px;
+  --full: 9999px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-layer);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Calculator wrapper */
+.calc-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--x6);
+}
+
+.calc {
+  background-color: var(--fg-neutral);
+  border-radius: var(--r4);
+  width: 320px;
+  overflow: hidden;
+  box-shadow:
+    0 4px 6px oklch(0.226 0.008 264 / 0.12),
+    0 12px 40px oklch(0.226 0.008 264 / 0.24);
+}
+
+/* Display */
+.display {
+  background-color: var(--gray-900);
+  padding: var(--x5) var(--x5) var(--x3);
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: var(--x2);
+}
+
+.display-expression {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: oklch(0.636 0.015 262);
+  min-height: 1.25rem;
+  letter-spacing: 0.01em;
+  word-break: break-all;
+  text-align: right;
+}
+
+.display-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--bg-default);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  word-break: break-all;
+  text-align: right;
+  transition: font-size 0.1s ease;
+}
+
+.display-value.shrink {
+  font-size: 1.75rem;
+}
+
+/* Keypad */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background-color: oklch(0.307 0.017 256 / 0.5);
+}
+
+/* Buttons */
+.btn {
+  font-family: var(--font-family);
+  font-size: 1.25rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.08s ease, transform 0.08s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.btn:active {
+  filter: brightness(0.85);
+  transform: scale(0.96);
+}
+
+/* Ghost (AC, +/-, %) */
+.btn-ghost {
+  background-color: var(--gray-800);
+  color: var(--bg-default);
+}
+
+/* Neutral (numbers, decimal) */
+.btn-neutral {
+  background-color: oklch(0.380 0.020 264);
+  color: var(--bg-default);
+}
+
+/* Operator buttons */
+.btn-operator {
+  background-color: var(--bg-brand-solid);
+  color: var(--fg-on-brand);
+  font-size: 1.5rem;
+}
+
+.btn-operator.active {
+  background-color: var(--fg-on-brand);
+  color: var(--bg-brand-solid);
+}
+
+/* Brand equals button */
+.btn-brand {
+  background-color: var(--bg-brand-solid);
+  color: var(--fg-on-brand);
+  font-size: 1.5rem;
+}
+
+.btn-brand:active {
+  background-color: var(--bg-brand-pressed);
+}
+
+/* Wide button (0) */
+.btn-wide {
+  grid-column: span 2;
+  justify-content: flex-start;
+  padding-left: var(--x6);
+}
+
+/* Ball animation */
+#ball-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.ball {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  opacity: 1;
+  will-change: transform, opacity;
+  box-shadow: 0 2px 8px oklch(0 0 0 / 0.25);
+}
+
+.ball.fade-out {
+  transition: opacity 0.4s ease-out;
+  opacity: 0;
+}

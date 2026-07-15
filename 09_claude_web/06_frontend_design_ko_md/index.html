@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>토스 계산기</title>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+  />
+  <style>
+    :root {
+      /* --- TDS greyscale (cool-blue tinted) --- */
+      --grey-900: #191F28;   /* primary text, never pure black */
+      --grey-700: #4E5968;   /* secondary text, expression */
+      --grey-500: #8B95A1;
+      --grey-200: #E5E8EB;   /* default divider / border */
+      --grey-100: #F2F4F6;   /* secondary surface (number keys) */
+      --grey-50:  #F9FAFB;   /* canvas */
+      --white:    #FFFFFF;
+
+      /* --- Brand (single accent) --- */
+      --blue-500: #3182F6;   /* Toss Blue — reserved for the one primary CTA (=) */
+      --blue-600: #2272EB;   /* pressed */
+      --blue-50:  #E8F3FF;   /* brand-weak surface (operators) */
+
+      /* --- Ball palette: TOSS brand colors --- */
+      --red-500:    #F04452;
+      --green-500:  #22C55E;
+      --yellow-500: #FFD400;
+      --orange-500: #FF8A00;
+
+      /* --- Elevation (navy-900 base, low alpha) --- */
+      --shadow-3: 0 12px 32px rgba(23, 24, 40, 0.10), 0 2px 6px rgba(23, 24, 40, 0.06);
+      --shadow-1: 0 1px 2px rgba(23, 24, 40, 0.04), 0 1px 1px rgba(23, 24, 40, 0.04);
+
+      /* --- Motion --- */
+      --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+      --dur-fast: 120ms;
+      --dur-slow: 320ms;
+
+      /* --- Radius ladder --- */
+      --radius-key: 20px;
+      --radius-card: 24px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { height: 100%; }
+
+    body {
+      font-family: "Pretendard Variable", Pretendard, -apple-system,
+        BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+      background: var(--grey-50);
+      color: var(--grey-900);
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    /* --- Billiard ball background layer --- */
+    #ball-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .ball {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 999px;
+      box-shadow: 0 6px 16px rgba(23, 24, 40, 0.18);
+      will-change: transform;
+      transition: opacity var(--dur-slow) var(--ease);
+      opacity: 1;
+    }
+    .ball.fade-out { opacity: 0; }
+
+    /* --- Calculator card --- */
+    .calc {
+      position: relative;
+      z-index: 1;
+      width: min(92vw, 360px);
+      background: var(--white);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-3);
+      padding: 24px;
+    }
+
+    .calc__label {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--grey-500);
+      margin-bottom: 16px;
+    }
+
+    /* --- Display --- */
+    .display {
+      text-align: right;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .display__expression {
+      font-size: 15px;
+      line-height: 1.5;
+      letter-spacing: -0.005em;
+      color: var(--grey-700);
+      font-variant-numeric: tabular-nums;
+      min-height: 22px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      direction: rtl;
+    }
+    .display__result {
+      font-size: 52px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--grey-900);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      direction: rtl;
+    }
+    .display__result.is-error {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--grey-700);
+      direction: ltr;
+    }
+
+    /* --- Keypad --- */
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .key {
+      appearance: none;
+      border: none;
+      height: 64px;
+      border-radius: var(--radius-key);
+      font-family: inherit;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      cursor: pointer;
+      background: var(--grey-100);
+      color: var(--grey-900);
+      position: relative;
+      transition: transform var(--dur-fast) var(--ease),
+        background var(--dur-fast) var(--ease),
+        color var(--dur-fast) var(--ease);
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* pressed = press-overlay (black 26%), not a shadow */
+    .key::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: rgba(0, 0, 0, 0.26);
+      opacity: 0;
+      transition: opacity var(--dur-fast) var(--ease);
+    }
+    .key:active { transform: scale(0.97); }
+    .key:active::after { opacity: 1; }
+
+    .key:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--blue-50), 0 0 0 4.5px var(--blue-500);
+    }
+
+    /* function keys AC ± % — weaker hierarchy */
+    .key--func { color: var(--grey-700); }
+
+    /* operators — brand-weak surface */
+    .key--op {
+      background: var(--blue-50);
+      color: var(--blue-500);
+      font-weight: 700;
+    }
+    /* active operator flips to grey-900 (active-chip pattern) */
+    .key--op.is-active {
+      background: var(--grey-900);
+      color: var(--white);
+    }
+
+    /* the single primary CTA */
+    .key--equals {
+      background: var(--blue-500);
+      color: var(--white);
+      font-weight: 700;
+    }
+
+    .key--zero { grid-column: span 2; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .key, .key::after, .ball { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div id="ball-layer" aria-hidden="true"></div>
+
+  <main class="calc">
+    <p class="calc__label">계산기</p>
+
+    <div class="display">
+      <div class="display__expression" id="expression" aria-hidden="true"></div>
+      <div
+        class="display__result"
+        id="result"
+        role="status"
+        aria-live="polite"
+        aria-label="계산 결과"
+      >0</div>
+    </div>
+
+    <div class="keypad">
+      <button class="key key--func" data-action="clear" aria-label="전체 지우기">AC</button>
+      <button class="key key--func" data-action="negate" aria-label="부호 바꾸기">±</button>
+      <button class="key key--func" data-action="percent" aria-label="퍼센트">%</button>
+      <button class="key key--op" data-op="/" aria-label="나누기">÷</button>
+
+      <button class="key" data-digit="7">7</button>
+      <button class="key" data-digit="8">8</button>
+      <button class="key" data-digit="9">9</button>
+      <button class="key key--op" data-op="*" aria-label="곱하기">×</button>
+
+      <button class="key" data-digit="4">4</button>
+      <button class="key" data-digit="5">5</button>
+      <button class="key" data-digit="6">6</button>
+      <button class="key key--op" data-op="-" aria-label="빼기">−</button>
+
+      <button class="key" data-digit="1">1</button>
+      <button class="key" data-digit="2">2</button>
+      <button class="key" data-digit="3">3</button>
+      <button class="key key--op" data-op="+" aria-label="더하기">+</button>
+
+      <button class="key key--zero" data-digit="0">0</button>
+      <button class="key" data-digit="." aria-label="소수점">.</button>
+      <button class="key key--equals" data-action="equals" aria-label="계산하기">=</button>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var OP_SYMBOL = { "+": "+", "-": "−", "*": "×", "/": "÷" };
+
+      var state = {
+        current: "0",     // operand being typed
+        previous: null,   // stored operand (number)
+        operator: null,   // pending operator
+        justEvaluated: false,
+        error: false,
+      };
+
+      var resultEl = document.getElementById("result");
+      var expressionEl = document.getElementById("expression");
+      var keypad = document.querySelector(".keypad");
+
+      // --- Formatting -------------------------------------------------
+      function formatNumber(str) {
+        if (str === "" || str === "-") return "0";
+        var negative = str.charAt(0) === "-";
+        var body = negative ? str.slice(1) : str;
+        var parts = body.split(".");
+        var intPart = parts[0] || "0";
+        var grouped = Number(intPart).toLocaleString("ko-KR");
+        var out = grouped;
+        if (parts.length > 1) out += "." + parts[1];
+        return (negative ? "−" : "") + out;
+      }
+
+      function render() {
+        if (state.error) {
+          resultEl.textContent = "0으로 나눌 수 없어요";
+          resultEl.classList.add("is-error");
+          expressionEl.textContent = "";
+          return;
+        }
+        resultEl.classList.remove("is-error");
+        resultEl.textContent = formatNumber(state.current);
+
+        if (state.operator && state.previous !== null && !state.justEvaluated) {
+          expressionEl.textContent =
+            formatNumber(String(state.previous)) + " " + OP_SYMBOL[state.operator];
+        } else {
+          expressionEl.textContent = "";
+        }
+      }
+
+      // --- Core operations --------------------------------------------
+      function compute(a, op, b) {
+        switch (op) {
+          case "+": return a + b;
+          case "-": return a - b;
+          case "*": return a * b;
+          case "/": return b === 0 ? null : a / b;
+        }
+        return b;
+      }
+
+      // Trim floating point noise, keep result clean
+      function toDisplayString(num) {
+        if (!isFinite(num)) return null;
+        var rounded = Math.round(num * 1e10) / 1e10;
+        return String(rounded);
+      }
+
+      function inputDigit(d) {
+        if (state.error) resetAll();
+
+        if (state.justEvaluated) {
+          state.current = "0";
+          state.justEvaluated = false;
+        }
+
+        if (d === ".") {
+          if (state.current.indexOf(".") === -1) state.current += ".";
+        } else if (state.current === "0") {
+          state.current = d;
+        } else {
+          if (state.current.replace(/[-.]/g, "").length >= 15) return; // guard length
+          state.current += d;
+        }
+        render();
+      }
+
+      function chooseOperator(op) {
+        if (state.error) return;
+
+        var currentNum = parseFloat(state.current);
+
+        if (state.operator && state.previous !== null && !state.justEvaluated) {
+          // chain: evaluate the pending operation first
+          var chained = compute(state.previous, state.operator, currentNum);
+          if (chained === null) return setError();
+          state.previous = chained;
+          state.current = toDisplayString(chained);
+        } else {
+          state.previous = currentNum;
+        }
+
+        state.operator = op;
+        state.justEvaluated = true; // next digit starts a fresh operand
+        render();
+        // keep expression visible while waiting for the second operand
+        expressionEl.textContent =
+          formatNumber(String(state.previous)) + " " + OP_SYMBOL[op];
+        setActiveOperator(op);
+      }
+
+      function equals() {
+        if (state.error) return;
+        if (state.operator === null || state.previous === null) return;
+
+        var b = parseFloat(state.current);
+        var res = compute(state.previous, state.operator, b);
+        if (res === null) return setError();
+
+        expressionEl.textContent =
+          formatNumber(String(state.previous)) +
+          " " + OP_SYMBOL[state.operator] + " " +
+          formatNumber(state.current) + " =";
+
+        state.current = toDisplayString(res);
+        state.previous = null;
+        state.operator = null;
+        state.justEvaluated = true;
+
+        resultEl.classList.remove("is-error");
+        resultEl.textContent = formatNumber(state.current);
+        clearActiveOperator();
+
+        launchBalls();
+      }
+
+      function negate() {
+        if (state.error || state.current === "0") return;
+        state.current =
+          state.current.charAt(0) === "-"
+            ? state.current.slice(1)
+            : "-" + state.current;
+        state.justEvaluated = false;
+        render();
+      }
+
+      function percent() {
+        if (state.error) return;
+        var num = parseFloat(state.current) / 100;
+        state.current = toDisplayString(num);
+        state.justEvaluated = false;
+        render();
+      }
+
+      function resetAll() {
+        state.current = "0";
+        state.previous = null;
+        state.operator = null;
+        state.justEvaluated = false;
+        state.error = false;
+        clearActiveOperator();
+        render();
+      }
+
+      function setError() {
+        state.error = true;
+        state.current = "0";
+        state.previous = null;
+        state.operator = null;
+        state.justEvaluated = false;
+        clearActiveOperator();
+        render();
+      }
+
+      // --- Active operator highlight ----------------------------------
+      function setActiveOperator(op) {
+        clearActiveOperator();
+        var btn = keypad.querySelector('.key--op[data-op="' + op + '"]');
+        if (btn) btn.classList.add("is-active");
+      }
+      function clearActiveOperator() {
+        var actives = keypad.querySelectorAll(".key--op.is-active");
+        for (var i = 0; i < actives.length; i++)
+          actives[i].classList.remove("is-active");
+      }
+
+      // --- Input routing ----------------------------------------------
+      function handleAction(action) {
+        if (action === "clear") resetAll();
+        else if (action === "equals") equals();
+        else if (action === "negate") negate();
+        else if (action === "percent") percent();
+      }
+
+      keypad.addEventListener("click", function (e) {
+        var btn = e.target.closest(".key");
+        if (!btn) return;
+        if (btn.dataset.digit !== undefined) inputDigit(btn.dataset.digit);
+        else if (btn.dataset.op !== undefined) chooseOperator(btn.dataset.op);
+        else if (btn.dataset.action !== undefined) handleAction(btn.dataset.action);
+      });
+
+      // --- Keyboard support -------------------------------------------
+      document.addEventListener("keydown", function (e) {
+        var k = e.key;
+        if (k >= "0" && k <= "9") { inputDigit(k); flash('[data-digit="' + k + '"]'); }
+        else if (k === ".") { inputDigit("."); flash('[data-digit="."]'); }
+        else if (k === "+" || k === "-" || k === "*" || k === "/") {
+          chooseOperator(k); flash('[data-op="' + cssEscape(k) + '"]');
+        }
+        else if (k === "Enter" || k === "=") { e.preventDefault(); equals(); flash('[data-action="equals"]'); }
+        else if (k === "Backspace") { backspace(); }
+        else if (k === "Escape") { resetAll(); flash('[data-action="clear"]'); }
+        else if (k === "%") { percent(); flash('[data-action="percent"]'); }
+      });
+
+      function cssEscape(ch) {
+        return ch; // operators here are safe attribute values
+      }
+
+      function backspace() {
+        if (state.error) { resetAll(); return; }
+        if (state.justEvaluated) return;
+        var s = state.current;
+        if (s.length <= 1 || (s.length === 2 && s.charAt(0) === "-")) {
+          state.current = "0";
+        } else {
+          state.current = s.slice(0, -1);
+        }
+        render();
+      }
+
+      // brief press feedback for keyboard input
+      function flash(selector) {
+        var el = keypad.querySelector(selector);
+        if (!el) return;
+        el.style.transform = "scale(0.97)";
+        setTimeout(function () { el.style.transform = ""; }, 100);
+      }
+
+      // --- Signature: billiard balls ----------------------------------
+      var BALL_COLORS = ["#3182F6", "#F04452", "#22C55E", "#FFD400", "#FF8A00"];
+      var BALL_SIZE = 50;
+      var DURATION = 3000;
+      var ballLayer = document.getElementById("ball-layer");
+      var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var activeRun = null;
+
+      function shuffle(arr) {
+        var a = arr.slice();
+        for (var i = a.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = a[i]; a[i] = a[j]; a[j] = t;
+        }
+        return a;
+      }
+
+      function launchBalls() {
+        // clean up any in-flight run
+        if (activeRun) {
+          cancelAnimationFrame(activeRun.raf);
+          clearTimeout(activeRun.timer);
+          ballLayer.innerHTML = "";
+          activeRun = null;
+        }
+
+        var W = window.innerWidth;
+        var H = window.innerHeight;
+        var colors = shuffle(BALL_COLORS);
+        var balls = [];
+
+        for (var i = 0; i < 5; i++) {
+          var el = document.createElement("div");
+          el.className = "ball";
+          el.style.background = colors[i];
+          ballLayer.appendChild(el);
+
+          var speed = 200 + Math.random() * 120; // px/s
+          var angle = Math.random() * Math.PI * 2;
+          balls.push({
+            el: el,
+            x: Math.random() * (W - BALL_SIZE),
+            y: Math.random() * (H - BALL_SIZE),
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+          });
+        }
+
+        // reduced motion: place, then fade — no physics
+        if (reduceMotion) {
+          for (var m = 0; m < balls.length; m++) {
+            balls[m].el.style.transform =
+              "translate(" + balls[m].x + "px," + balls[m].y + "px)";
+          }
+          var rmTimer = setTimeout(function () { fadeAndClear(); }, DURATION);
+          activeRun = { raf: 0, timer: rmTimer };
+          return;
+        }
+
+        var last = performance.now();
+        var start = last;
+
+        function frame(now) {
+          var dt = (now - last) / 1000;
+          last = now;
+          var vw = window.innerWidth;
+          var vh = window.innerHeight;
+
+          for (var b = 0; b < balls.length; b++) {
+            var ball = balls[b];
+            ball.x += ball.vx * dt;
+            ball.y += ball.vy * dt;
+
+            var maxX = vw - BALL_SIZE;
+            var maxY = vh - BALL_SIZE;
+
+            if (ball.x <= 0) { ball.x = 0; ball.vx = Math.abs(ball.vx); }
+            else if (ball.x >= maxX) { ball.x = maxX; ball.vx = -Math.abs(ball.vx); }
+            if (ball.y <= 0) { ball.y = 0; ball.vy = Math.abs(ball.vy); }
+            else if (ball.y >= maxY) { ball.y = maxY; ball.vy = -Math.abs(ball.vy); }
+
+            ball.el.style.transform =
+              "translate(" + ball.x + "px," + ball.y + "px)";
+          }
+
+          if (now - start < DURATION) {
+            activeRun.raf = requestAnimationFrame(frame);
+          } else {
+            fadeAndClear();
+          }
+        }
+
+        function fadeAndClear() {
+          var nodes = ballLayer.querySelectorAll(".ball");
+          for (var n = 0; n < nodes.length; n++) nodes[n].classList.add("fade-out");
+          var clearTimer = setTimeout(function () {
+            ballLayer.innerHTML = "";
+            activeRun = null;
+          }, 340);
+          if (activeRun) activeRun.timer = clearTimer;
+        }
+
+        activeRun = { raf: requestAnimationFrame(frame), timer: 0 };
+      }
+
+      // initial paint
+      render();
+    })();
+  </script>
+</body>
+</html>
