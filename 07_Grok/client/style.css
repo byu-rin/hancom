@@ -9,7 +9,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ece9f5;
+  background: linear-gradient(160deg, #fce7f3, #fbcfe8);
   font-family: "Pretendard", "Apple SD Gothic Neo", sans-serif;
 }
 
@@ -19,8 +19,8 @@ body {
   height: 640px;
   max-height: 90vh;
   background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  border-radius: 20px;
+  box-shadow: 0 20px 44px rgba(190, 24, 93, 0.2);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -28,7 +28,7 @@ body {
 
 header {
   padding: 16px 20px;
-  background: #6c5ce7;
+  background: linear-gradient(120deg, #f472b6, #ec4899);
   color: #fff;
 }
 
@@ -56,12 +56,26 @@ header h1 {
   font-size: 14px;
   white-space: pre-wrap;
   word-break: break-word;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  animation: pop-in 0.2s ease-out;
+}
+
+/* 말풍선이 나타날 때 살짝 떠오르는 효과 */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* 내가 보낸 메시지: 오른쪽, 보라색 */
 .msg.user {
   align-self: flex-end;
-  background: #6c5ce7;
+  background: linear-gradient(135deg, #f472b6, #ec4899);
   color: #fff;
   border-bottom-right-radius: 4px;
 }
@@ -131,10 +145,12 @@ header h1 {
   border-radius: 20px;
   font-size: 14px;
   outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 #q:focus {
-  border-color: #6c5ce7;
+  border-color: #ec4899;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15);
 }
 
 #q:disabled {
@@ -145,13 +161,22 @@ header h1 {
   padding: 0 18px;
   border: none;
   border-radius: 20px;
-  background: #6c5ce7;
+  background: linear-gradient(135deg, #f472b6, #ec4899);
   color: #fff;
   font-size: 14px;
   cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.15s;
+}
+
+#btn:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.35);
+}
+
+#btn:active:not(:disabled) {
+  transform: scale(0.96);
 }
 
 #btn:disabled {
-  background: #b8b0e8;
+  background: #f5b0d3;
   cursor: not-allowed;
 }
