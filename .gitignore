@@ -39,3 +39,9 @@ build/
 .env.production.local
 .vercel
 .env*
+
+# yolo_alarm.py
+yolo_alarm.py
+
+# 모델
+*.pt

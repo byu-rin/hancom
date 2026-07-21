@@ -2,7 +2,7 @@ from ultralytics import YOLO
 import cv2
 
 # 1. 비디오/스트림 경로 설정
-cap = cv2.VideoCapture("http://210.99.70.120:1935/live/cctv009.stream/playlist.m3u8")
+cap = cv2.VideoCapture(0)
 
 # 2. 모델 로드
 model = YOLO("yolo11n.pt")
